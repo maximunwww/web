@@ -416,6 +416,7 @@ nav {
 }
 
 .cmd-card-header {
+    display: files;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -484,4 +485,6 @@ footer {
 }
 
 footer span {
-    color: #f0f6fc
+    color: #f0f6fc;
+    font-weight: 600;
+}

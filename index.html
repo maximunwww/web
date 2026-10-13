@@ -1,9 +1,184 @@
-<!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0b0e"><meta name="description" content="SANCHEZ BOT para Discord"><title>SANCHEZ BOT — Discord</title><link rel="icon" href="assets/logo.svg"><link rel="stylesheet" href="styles.css"></head>
-<body><header class="topbar"><a class="brand" href="#inicio"><img src="assets/logo.svg" alt="" width="32" height="32"> SANCHEZ <span>BOT</span></a><button id="menuToggle" aria-label="Abrir menú">☰</button><nav id="nav"><a href="#funciones">Funciones</a><a href="#comandos">Comandos</a><a href="#faq">Soporte</a><a class="nav-cta" href="https://discord.com/oauth2/authorize?client_id=1551781231384068097&amp;permissions=8&amp;integration_type=0&amp;scope=bot" target="_blank" rel="noopener noreferrer">Invitar bot ↗</a></nav></header>
-<main><section class="hero wrap" id="inicio"><div><div class="eyebrow"><i></i> BOT DE DISCORD</div><h1>Tu servidor.<br><span>Más sencillo.</span></h1><p class="muted intro">Herramientas prácticas para tu comunidad, con un diseño limpio y funciones para mantener tu servidor organizado.</p><div class="actions"><a class="btn primary" href="https://discord.com/oauth2/authorize?client_id=1551781231384068097&amp;permissions=8&amp;integration_type=0&amp;scope=bot" target="_blank" rel="noopener noreferrer">Añadir a Discord ↗</a><a class="btn" href="#comandos">Ver comandos ↓</a></div><p class="muted small">Prefijo de comandos: <code>,</code></p></div><aside class="preview"><div class="window"><span>● ● ●</span><span>SANCHEZ BOT / overview</span><span>•••</span></div><div class="preview-inner"><img class="avatar" src="assets/logo.svg" alt="Logo"><h2>SANCHEZ BOT <b>✓</b></h2><p class="muted">Herramientas para tu comunidad</p><div class="online"><i></i> Preparado para empezar</div><hr><small>COMANDO DE EJEMPLO</small><div class="command"><code>,help</code><span>PREFIX</span></div><div class="mini-feature"><strong>◈　Canales de voz</strong><small>　　Organiza tus salas</small></div><div class="mini-feature"><strong>⌘　Comandos útiles</strong><small>　　Acceso rápido a herramientas</small></div></div></aside></section>
-<section class="stats wrap"><div><strong>Discord</strong><span>Hecho para servidores</span></div><div><strong>Prefijo ,</strong><span>Fácil de recordar</span></div><div><strong>Funciones</strong><span>Utilidades para la comunidad</span></div></section>
-<section class="wrap section" id="funciones"><div class="eyebrow">QUÉ OFRECE</div><h2>Todo en un solo lugar.</h2><p class="muted">Una base para presentar las funciones de SANCHEZ BOT.</p><div class="grid"><article><b class="icon">◈</b><h3>Canales de voz</h3><p class="muted">Presenta la creación y gestión de canales temporales, si está habilitada en tu bot.</p><small>01 / VOICE</small></article><article><b class="icon">⌘</b><h3>Comandos simples</h3><p class="muted">Consulta los comandos disponibles usando la coma como prefijo.</p><small>02 / COMMANDS</small></article><article><b class="icon">⚙</b><h3>Configuración</h3><p class="muted">Una página central para encontrar las funciones de tu comunidad.</p><small>03 / SETTINGS</small></article></div></section>
-<section class="wrap section" id="comandos"><div class="eyebrow">COMANDOS</div><h2>Rápido. Claro. Directo.</h2><p class="muted">Ejemplos de presentación: confirma que existan en el código de tu bot.</p><div class="command-list"><div><code>,help</code><p class="muted">Muestra ayuda, si está implementada.</p><small>GENERAL</small></div><div><code>,ping</code><p class="muted">Comprueba la latencia, si está implementado.</p><small>GENERAL</small></div><div><code>,voice</code><p class="muted">Ejemplo de categoría de voz; reemplázalo por tus comandos reales.</p><small>VOICE</small></div></div><p class="muted small">Los comandos son ejemplos visuales, no una garantía de que estén implementados.</p></section>
-<section class="wrap cta" id="faq"><div class="panel"><div class="eyebrow">¿LISTO PARA EMPEZAR?</div><h2>Haz espacio para algo mejor.</h2><p class="muted">Añade SANCHEZ BOT a tu servidor de Discord.</p><a class="btn primary" href="https://discord.com/oauth2/authorize?client_id=1551781231384068097&amp;permissions=8&amp;integration_type=0&amp;scope=bot" target="_blank" rel="noopener noreferrer">Invitar SANCHEZ BOT ↗</a></div><div class="panel support"><h3>¿Necesitas ayuda?</h3><p class="muted">El enlace del servidor de soporte aún está pendiente. Añádelo cuando tengas una invitación válida.</p><span class="muted">Soporte pendiente</span></div></section></main>
-<footer class="wrap footer"><a class="brand" href="#inicio"><img src="assets/logo.svg" width="28" height="28" alt=""> SANCHEZ <span>BOT</span></a><a href="#inicio">Volver arriba ↑</a><small>© <span id="year"></span> SANCHEZ BOT. Página comunitaria no afiliada a Discord.</small></footer><script src="script.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanchez Bot - Tu servidor. Más sencillo.</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-logo">
+            <img src="https://i.imgur.com/8Q9Z9Z9.png" alt="Logo">
+            SANCHEZ BOT
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="active">Inicio</a></li>
+            <li><a href="#comandos">Comandos</a></li>
+            <li><a href="#">Funciones</a></li>
+            <li><a href="#">Soporte</a></li>
+        </ul>
+        <a href="#" class="btn-invite-nav">Invitar al bot</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-tag">● BOT DE DISCORD</div>
+            <h1>Tu servidor. <span>Más sencillo.</span></h1>
+            <p>Herramientas prácticas para tu comunidad, con un diseño limpio y funciones para mantener tu servidor organizado.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn-primary">Añadir a Discord ↗</a>
+                <a href="#comandos" class="btn-secondary">Ver comandos ↓</a>
+            </div>
+            <div class="hero-prefix">
+                Prefijo de comandos: <span>,</span>
+            </div>
+        </div>
+
+        <div class="hero-mockup">
+            <div class="mockup-header">
+                <div class="mockup-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                SANCHEZ BOT / overview
+            </div>
+            <div class="mockup-bot-info">
+                <div class="mockup-bot-avatar">🤖</div>
+                <div>
+                    <div class="mockup-bot-name">SANCHEZ BOT</div>
+                    <div class="mockup-bot-desc">Herramientas para tu comunidad</div>
+                </div>
+            </div>
+            <div class="mockup-command-box">
+                <span>,help</span>
+                <span>PREFIX</span>
+            </div>
+            <div class="mockup-features">
+                <div class="mockup-feature-item">
+                    ❖ Canales de voz
+                    <small>Organiza tus salas</small>
+                </div>
+                <div class="mockup-feature-item">
+                    ⌘ Comandos útiles
+                    <small>Acceso rápido a herramientas</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comandos Section -->
+    <div class="commands-container" id="comandos">
+        <div class="section-title">
+            ⌨️ Comandos
+        </div>
+        <div class="section-subtitle">
+            Aquí tienes todos los comandos disponibles de SANCHEZ BOT, organizados por categorías.
+        </div>
+
+        <div class="grid-commands">
+            
+            <!-- General -->
+            <div class="cmd-card">
+                <div class="cmd-card-header">
+                    <h3>💬 General</h3>
+                </div>
+                <div class="cmd-card-desc">Comandos básicos y de utilidad.</div>
+                <div class="cmd-list">
+                    <div class="cmd-item"><span class="cmd-name">,menu</span><span class="cmd-desc">Muestra el menú principal</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,help</span><span class="cmd-desc">Muestra la lista de comandos</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,ping</span><span class="cmd-desc">Comprueba la latencia</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,voice</span><span class="cmd-desc">Ejemplo de comando de voz</span></div>
+                </div>
+            </div>
+
+            <!-- Salas de voz -->
+            <div class="cmd-card">
+                <div class="cmd-card-header">
+                    <h3>🎧 Salas de voz</h3>
+                </div>
+                <div class="cmd-card-desc">Gestiona las salas de voz temporales y su configuración.</div>
+                <div class="cmd-list">
+                    <div class="cmd-item"><span class="cmd-name">,panelvc</span><span class="cmd-desc">Publica el panel</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,configuracionvc</span><span class="cmd-desc">Configura el canal</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,crearvc</span><span class="cmd-desc">Crea una sala temporal</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,bloquearvc</span><span class="cmd-desc">Bloquea una sala</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,desbloquearvc</span><span class="cmd-desc">Desbloquea una sala</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,ocultarvc</span><span class="cmd-desc">Oculta una sala</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,mostrarvc</span><span class="cmd-desc">Muestra una sala</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,renombrarvc</span><span class="cmd-desc">Renombra una sala</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,reclamarvc</span><span class="cmd-desc">Reclama una sala</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,limitarvc</span><span class="cmd-desc">Ajusta el límite</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,eliminarvc</span><span class="cmd-desc">Elimina una sala</span></div>
+                </div>
+            </div>
+
+            <!-- Moderación -->
+            <div class="cmd-card">
+                <div class="cmd-card-header">
+                    <h3>🛡️ Moderación</h3>
+                </div>
+                <div class="cmd-card-desc">Mantén tu servidor seguro y en orden.</div>
+                <div class="cmd-list">
+                    <div class="cmd-item"><span class="cmd-name">,ban</span><span class="cmd-desc">Banea a un miembro</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,kick</span><span class="cmd-desc">Expulsa a un miembro</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,mute</span><span class="cmd-desc">Silencia a un miembro</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,unmute</span><span class="cmd-desc">Quita el silencio</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,warn</span><span class="cmd-desc">Da una advertencia</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,clear</span><span class="cmd-desc">Elimina mensajes</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,announce</span><span class="cmd-desc">Envía un anuncio</span></div>
+                </div>
+            </div>
+
+            <!-- Anti-Nuke -->
+            <div class="cmd-card">
+                <div class="cmd-card-header">
+                    <h3>🛡️ Anti-Nuke</h3>
+                </div>
+                <div class="cmd-card-desc">Protección contra ataques y spam masivo.</div>
+                <div class="cmd-list">
+                    <div class="cmd-item"><span class="cmd-name">,antinuke</span><span class="cmd-desc">Activa o desactiva Anti-Nuke</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,nukeinfo</span><span class="cmd-desc">Muestra la configuración</span></div>
+                </div>
+            </div>
+
+            <!-- Servidor -->
+            <div class="cmd-card">
+                <div class="cmd-card-header">
+                    <h3>💾 Servidor</h3>
+                </div>
+                <div class="cmd-card-desc">Información y utilidades del servidor.</div>
+                <div class="cmd-list">
+                    <div class="cmd-item"><span class="cmd-name">,info</span><span class="cmd-desc">Información del servidor</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,usuarios</span><span class="cmd-desc">Miembros del servidor</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,roles</span><span class="cmd-desc">Roles del servidor</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,canales</span><span class="cmd-desc">Canales del servidor</span></div>
+                </div>
+            </div>
+
+            <!-- Información -->
+            <div class="cmd-card">
+                <div class="cmd-card-header">
+                    <h3>ℹ️ Información</h3>
+                </div>
+                <div class="cmd-card-desc">Datos y enlaces importantes.</div>
+                <div class="cmd-list">
+                    <div class="cmd-item"><span class="cmd-name">,botinfo</span><span class="cmd-desc">Información sobre el bot</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,github</span><span class="cmd-desc">Enlace al repositorio</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,support</span><span class="cmd-desc">Enlace al soporte</span></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <span>SANCHEZ BOT</span> • Discord • Crear, moderar, disfrutar
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

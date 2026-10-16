@@ -17,8 +17,8 @@
         <ul class="nav-links">
             <li><a href="#" class="active">Inicio</a></li>
             <li><a href="#comandos">Comandos</a></li>
-            <li><a href="#">Funciones</a></li>
-            <li><a href="#">Soporte</a></li>
+            <li><a href="#funciones">Funciones</a></li>
+            <li><a href="https://discord.gg/removingsouls" target="_blank">Soporte</a></li>
         </ul>
         <a href="https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands" target="_blank" class="btn-invite-nav">Invitar al bot</a>
     </nav>
@@ -69,105 +69,100 @@
         </div>
     </section>
 
-    <!-- Comandos Section -->
+    <!-- Comandos Section con Buscador -->
     <div class="commands-container" id="comandos">
         <div class="section-title">
             ⌨️ Comandos
         </div>
         <div class="section-subtitle">
-            Aquí tienes todos los comandos disponibles de MISS ME BOT, organizados por categorías.
+            Busca y explora todos los comandos disponibles de MISS ME BOT.
         </div>
 
-        <div class="grid-commands">
+        <!-- Barra de búsqueda -->
+        <div class="search-box-wrapper">
+            <input type="text" id="commandSearch" placeholder="Busca un comando (ej: panelvc, ban, clearavatars)..." onkeyup="filterCommands()">
+        </div>
+
+        <div class="grid-commands" id="commandsGrid">
             
             <!-- General -->
-            <div class="cmd-card show">
+            <div class="cmd-card show" data-category="general">
                 <div class="cmd-card-header">
                     <h3>💬 General</h3>
                 </div>
                 <div class="cmd-card-desc">Comandos básicos y de utilidad.</div>
                 <div class="cmd-list">
                     <div class="cmd-item"><span class="cmd-name">,menu</span><span class="cmd-desc">Muestra el menú principal</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,help</span><span class="cmd-desc">Muestra la lista de comandos</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,ping</span><span class="cmd-desc">Comprueba la latencia</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,voice</span><span class="cmd-desc">Ejemplo de comando de voz</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,help</span><span class="cmd-desc">Muestra información y soporte</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,ping</span><span class="cmd-desc">Comprueba la latencia del bot</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,activos</span><span class="cmd-desc">Miembros más activos</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,inactivos</span><span class="cmd-desc">Miembros con 0 mensajes</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,avatars</span><span class="cmd-desc">Muestra historial de avatares</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,names</span><span class="cmd-desc">Muestra historial de nombres</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,clearavatars</span><span class="cmd-desc">Limpia historial de avatares</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,clearnames</span><span class="cmd-desc">Limpia historial de nombres</span></div>
                 </div>
             </div>
 
             <!-- Salas de voz -->
-            <div class="cmd-card show">
+            <div class="cmd-card show" data-category="voz">
                 <div class="cmd-card-header">
-                    <h3>🎧 Salas de voz</h3>
+                    <h3>🎧 Salas de Voz</h3>
                 </div>
-                <div class="cmd-card-desc">Gestiona las salas de voz temporales y su configuración.</div>
+                <div class="cmd-card-desc">Gestión avanzada de salas de voz temporales.</div>
                 <div class="cmd-list">
-                    <div class="cmd-item"><span class="cmd-name">,panelvc</span><span class="cmd-desc">Publica el panel</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,configuracionvc</span><span class="cmd-desc">Configura el canal</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,crearvc</span><span class="cmd-desc">Crea una sala temporal</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,bloquearvc</span><span class="cmd-desc">Bloquea una sala</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,desbloquearvc</span><span class="cmd-desc">Desbloquea una sala</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,ocultarvc</span><span class="cmd-desc">Oculta una sala</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,mostrarvc</span><span class="cmd-desc">Muestra una sala</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,renombrarvc</span><span class="cmd-desc">Renombra una sala</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,reclamarvc</span><span class="cmd-desc">Reclama una sala</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,limitarvc</span><span class="cmd-desc">Ajusta el límite</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,eliminarvc</span><span class="cmd-desc">Elimina una sala</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,panelvc</span><span class="cmd-desc">Envía el panel de control interactivo</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,configuracionvc</span><span class="cmd-desc">Configura canales de voz y panel</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,join</span><span class="cmd-desc">Une el bot a tu canal de voz</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,leave</span><span class="cmd-desc">Desconecta el bot del canal</span></div>
                 </div>
             </div>
 
             <!-- Moderación -->
-            <div class="cmd-card show">
+            <div class="cmd-card show" data-category="moderacion">
                 <div class="cmd-card-header">
                     <h3>🛡️ Moderación</h3>
                 </div>
-                <div class="cmd-card-desc">Mantén tu servidor seguro y en orden.</div>
+                <div class="cmd-card-desc">Mantén tu servidor seguro y ordenado.</div>
                 <div class="cmd-list">
-                    <div class="cmd-item"><span class="cmd-name">,ban</span><span class="cmd-desc">Banea a un miembro</span></div>
                     <div class="cmd-item"><span class="cmd-name">,kick</span><span class="cmd-desc">Expulsa a un miembro</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,mute</span><span class="cmd-desc">Silencia a un miembro</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,unmute</span><span class="cmd-desc">Quita el silencio</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,warn</span><span class="cmd-desc">Da una advertencia</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,clear</span><span class="cmd-desc">Elimina mensajes</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,announce</span><span class="cmd-desc">Envía un anuncio</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,ban</span><span class="cmd-desc">Banea a un miembro</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,timeout</span><span class="cmd-desc">Silencia temporalmente a un miembro</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,untimeout</span><span class="cmd-desc">Remueve el silencio</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,lock</span><span class="cmd-desc">Bloquea el canal actual</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,unlock</span><span class="cmd-desc">Desbloquea el canal actual</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,purge / c</span><span class="cmd-desc">Elimina mensajes rápidamente</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,clear</span><span class="cmd-desc">Purgar chat completo</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,announce</span><span class="cmd-desc">Envía un anuncio oficial</span></div>
                 </div>
             </div>
 
-            <!-- Anti-Nuke -->
-            <div class="cmd-card show">
+            <!-- Configuración y Seguridad -->
+            <div class="cmd-card show" data-category="seguridad">
                 <div class="cmd-card-header">
-                    <h3>🛡️ Anti-Nuke</h3>
+                    <h3>🔒 Seguridad & Servidor</h3>
                 </div>
-                <div class="cmd-card-desc">Protección contra ataques y spam masivo.</div>
+                <div class="cmd-card-desc">Protección contra nuke y configuraciones automáticas.</div>
                 <div class="cmd-list">
-                    <div class="cmd-item"><span class="cmd-name">,antinuke</span><span class="cmd-desc">Activa o desactiva Anti-Nuke</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,nukeinfo</span><span class="cmd-desc">Muestra la configuración</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,antinuke</span><span class="cmd-desc">Administra la whitelist antinuke</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,rolewl</span><span class="cmd-desc">Protege roles contra asignación no autorizada</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,autorole</span><span class="cmd-desc">Configura roles automáticos para miembros/bots</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,bienvenida</span><span class="cmd-desc">Configura canal de bienvenida</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,owner</span><span class="cmd-desc">Gestiona dueños del bot</span></div>
                 </div>
             </div>
 
-            <!-- Servidor -->
-            <div class="cmd-card show">
+            <!-- Utilidades y Diversión -->
+            <div class="cmd-card show" data-category="utilidades">
                 <div class="cmd-card-header">
-                    <h3>💾 Servidor</h3>
+                    <h3>⚡ Utilidades & Diversión</h3>
                 </div>
-                <div class="cmd-card-desc">Información y utilidades del servidor.</div>
+                <div class="cmd-card-desc">Información del servidor y comandos interactivos.</div>
                 <div class="cmd-list">
-                    <div class="cmd-item"><span class="cmd-name">,info</span><span class="cmd-desc">Información del servidor</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,usuarios</span><span class="cmd-desc">Miembros del servidor</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,roles</span><span class="cmd-desc">Roles del servidor</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,canales</span><span class="cmd-desc">Canales del servidor</span></div>
-                </div>
-            </div>
-
-            <!-- Información -->
-            <div class="cmd-card show">
-                <div class="cmd-card-header">
-                    <h3>ℹ️ Información</h3>
-                </div>
-                <div class="cmd-card-desc">Datos y enlaces importantes.</div>
-                <div class="cmd-list">
-                    <div class="cmd-item"><span class="cmd-name">,botinfo</span><span class="cmd-desc">Información sobre el bot</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,github</span><span class="cmd-desc">Enlace al repositorio</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,support</span><span class="cmd-desc">Enlace al soporte</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,serverinfo</span><span class="cmd-desc">Información detallada del servidor</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,userinfo</span><span class="cmd-desc">Información de un usuario</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,roles</span><span class="cmd-desc">Lista paginada de roles</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,kill</span><span class="cmd-desc">Comando interactivo con opción de venganza</span></div>
                 </div>
             </div>
 
@@ -179,6 +174,33 @@
         <span>MISS ME BOT</span> • Discord • Crear, moderar, disfrutar
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Script para el buscador en tiempo real -->
+    <script>
+        function filterCommands() {
+            let input = document.getElementById('commandSearch').value.toLowerCase();
+            let cards = document.getElementsByClassName('cmd-card');
+
+            for (let i = 0; i < cards.length; i++) {
+                let items = cards[i].getElementsByClassName('cmd-item');
+                let cardHasMatch = false;
+
+                for (let j = 0; j < items.length; j++) {
+                    let text = items[j].innerText.toLowerCase();
+                    if (text.includes(input)) {
+                        items[j].style.display = "";
+                        cardHasMatch = true;
+                    } else {
+                        items[j].style.display = "none";
+                    }
+                }
+
+                if (cardHasMatch || input === "") {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
+    </script>
 </body>
 </html>

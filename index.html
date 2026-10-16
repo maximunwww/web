@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MISS ME BOT - Tu servidor. Más sencillo.</title>
+    <title>MISS ME BOT - El poder de la simplicidad en Discord</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,25 +16,25 @@
         </div>
         <ul class="nav-links">
             <li><a href="#" class="active">Inicio</a></li>
+            <li><a href="#about">Acerca de</a></li>
             <li><a href="#comandos">Comandos</a></li>
-            <li><a href="#funciones">Funciones</a></li>
             <li><a href="https://discord.gg/removingsouls" target="_blank">Soporte</a></li>
         </ul>
-        <a href="https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands" target="_blank" class="btn-invite-nav">Invitar al bot</a>
+        <a href="https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands" target="_blank" class="btn-invite-nav">Invitar bot</a>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <div class="hero-tag">● BOT DE DISCORD</div>
-            <h1>Tu servidor. <span>Más sencillo.</span></h1>
-            <p>Herramientas prácticas para tu comunidad, con un diseño limpio y funciones para mantener tu servidor organizado.</p>
+            <div class="hero-tag">● DISEÑADO PARA COMUNIDADES EXIGENTES</div>
+            <h1>Tu servidor. <span>Más limpio, seguro y potente.</span></h1>
+            <p>Miss me bot nació para ofrecer una experiencia minimalista sin rodeos. Control absoluto de salas de voz, protección anti-nuke estricta y herramientas que tu comunidad amará.</p>
             <div class="hero-buttons">
                 <a href="https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands" target="_blank" class="btn-primary">Añadir a Discord ↗</a>
-                <a href="#comandos" class="btn-secondary">Ver comandos ↓</a>
+                <a href="#comandos" class="btn-secondary">Explorar comandos ↓</a>
             </div>
             <div class="hero-prefix">
-                Prefijo de comandos: <span>,</span>
+                Prefijo por defecto: <span>,</span>
             </div>
         </div>
 
@@ -43,126 +43,110 @@
                 <div class="mockup-dots">
                     <span></span><span></span><span></span>
                 </div>
-                MISS ME BOT / overview
+                missme / core-system
             </div>
             <div class="mockup-bot-info">
                 <img src="assets/avatar.png" alt="Avatar Bot" class="mockup-bot-avatar">
                 <div>
                     <div class="mockup-bot-name">MISS ME BOT</div>
-                    <div class="mockup-bot-desc">Herramientas para tu comunidad</div>
+                    <div class="mockup-bot-desc">Estética y rendimiento en armonía</div>
                 </div>
             </div>
             <div class="mockup-command-box">
                 <span>,menu</span>
-                <span>PREFIX</span>
+                <span>ACTIVO</span>
             </div>
             <div class="mockup-features">
                 <div class="mockup-feature-item">
-                    ❖ Canales de voz
-                    <small>Organiza tus salas</small>
+                    🎧 Salas Temporales
+                    <small>Control total por el usuario</small>
                 </div>
                 <div class="mockup-feature-item">
-                    ⌘ Comandos útiles
-                    <small>Acceso rápido a herramientas</small>
+                    🛡️ Anti-Nuke
+                    <small>Seguridad de alto nivel</small>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Comandos Section con Buscador -->
-    <div class="commands-container" id="comandos">
-        <div class="section-title">
-            ⌨️ Comandos
-        </div>
-        <div class="section-subtitle">
-            Busca y explora todos los comandos disponibles de MISS ME BOT.
-        </div>
+    <!-- Sección de Propósito / Por qué elegirlo -->
+    <section class="about-section" id="about">
+        <div class="section-title">¿Por qué elegir Miss me bot?</div>
+        <div class="section-subtitle">Creado bajo una filosofía minimalista en negro y blanco puro: potencia sin saturación.</div>
 
-        <!-- Barra de búsqueda -->
+        <div class="about-grid">
+            <div class="about-card">
+                <h3>⚡ Cero Lag, 100% Optimizado</h3>
+                <p>Programado con tecnología de punta en Python para garantizar respuestas instantáneas sin retrasos molestos en tus canales.</p>
+            </div>
+            <div class="about-card">
+                <h3>🎧 Salas de Voz Inteligentes</h3>
+                <p>Tus usuarios entran al canal generador y obtienen su propia sala privada con un panel de control interactivo en Discord.</p>
+            </div>
+            <div class="about-card">
+                <h3>🛡️ Seguridad Inquebrantable</h3>
+                <p>Protección contra ataques masivos (anti-nuke) y listas blancas estrictas para mantener a salvo los roles importantes de tu servidor.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comandos Section con Barra de Búsqueda Grande -->
+    <div class="commands-container" id="comandos">
+        <div class="section-title">⌨️ Comandos del Bot</div>
+        <div class="section-subtitle">Busca de forma rápida cualquier comando escribiendo su nombre o función abajo.</div>
+
+        <!-- Barra de búsqueda grande, minimalista y elegante -->
         <div class="search-box-wrapper">
-            <input type="text" id="commandSearch" placeholder="Busca un comando (ej: panelvc, ban, clearavatars)..." onkeyup="filterCommands()">
+            <input type="text" id="commandSearch" placeholder="🔍 Escribe para buscar un comando (ej: panelvc, ban, avatars)..." onkeyup="filterCommands()">
         </div>
 
         <div class="grid-commands" id="commandsGrid">
             
-            <!-- General -->
-            <div class="cmd-card show" data-category="general">
-                <div class="cmd-card-header">
-                    <h3>💬 General</h3>
-                </div>
-                <div class="cmd-card-desc">Comandos básicos y de utilidad.</div>
-                <div class="cmd-list">
-                    <div class="cmd-item"><span class="cmd-name">,menu</span><span class="cmd-desc">Muestra el menú principal</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,help</span><span class="cmd-desc">Muestra información y soporte</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,ping</span><span class="cmd-desc">Comprueba la latencia del bot</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,activos</span><span class="cmd-desc">Miembros más activos</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,inactivos</span><span class="cmd-desc">Miembros con 0 mensajes</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,avatars</span><span class="cmd-desc">Muestra historial de avatares</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,names</span><span class="cmd-desc">Muestra historial de nombres</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,clearavatars</span><span class="cmd-desc">Limpia historial de avatares</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,clearnames</span><span class="cmd-desc">Limpia historial de nombres</span></div>
-                </div>
-            </div>
-
             <!-- Salas de voz -->
-            <div class="cmd-card show" data-category="voz">
+            <div class="cmd-card show">
                 <div class="cmd-card-header">
                     <h3>🎧 Salas de Voz</h3>
                 </div>
-                <div class="cmd-card-desc">Gestión avanzada de salas de voz temporales.</div>
+                <div class="cmd-card-desc">Gestión y control de canales de voz temporales.</div>
                 <div class="cmd-list">
-                    <div class="cmd-item"><span class="cmd-name">,panelvc</span><span class="cmd-desc">Envía el panel de control interactivo</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,configuracionvc</span><span class="cmd-desc">Configura canales de voz y panel</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,join</span><span class="cmd-desc">Une el bot a tu canal de voz</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,panelvc</span><span class="cmd-desc">Envía el panel interactivo de control</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,configuracionvc</span><span class="cmd-desc">Configura canales mediante menús</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,join</span><span class="cmd-desc">conecta el bot a tu canal</span></div>
                     <div class="cmd-item"><span class="cmd-name">,leave</span><span class="cmd-desc">Desconecta el bot del canal</span></div>
                 </div>
             </div>
 
-            <!-- Moderación -->
-            <div class="cmd-card show" data-category="moderacion">
+            <!-- Moderación y Seguridad -->
+            <div class="cmd-card show">
                 <div class="cmd-card-header">
-                    <h3>🛡️ Moderación</h3>
+                    <h3>🛡️ Moderación & Seguridad</h3>
                 </div>
-                <div class="cmd-card-desc">Mantén tu servidor seguro y ordenado.</div>
+                <div class="cmd-card-desc">Herramientas esenciales para proteger tu comunidad.</div>
                 <div class="cmd-list">
+                    <div class="cmd-item"><span class="cmd-name">,ban</span><span class="cmd-desc">Banea a un miembro del servidor</span></div>
                     <div class="cmd-item"><span class="cmd-name">,kick</span><span class="cmd-desc">Expulsa a un miembro</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,ban</span><span class="cmd-desc">Banea a un miembro</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,timeout</span><span class="cmd-desc">Silencia temporalmente a un miembro</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,untimeout</span><span class="cmd-desc">Remueve el silencio</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,lock</span><span class="cmd-desc">Bloquea el canal actual</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,unlock</span><span class="cmd-desc">Desbloquea el canal actual</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,purge / c</span><span class="cmd-desc">Elimina mensajes rápidamente</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,clear</span><span class="cmd-desc">Purgar chat completo</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,announce</span><span class="cmd-desc">Envía un anuncio oficial</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,timeout</span><span class="cmd-desc">Silencia temporalmente a un usuario</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,lock / unlock</span><span class="cmd-desc">Bloquea o desbloquea canales de texto</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,clear</span><span class="cmd-desc">Purgar mensajes masivamente</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,antinuke</span><span class="cmd-desc">Gestiona administradores protegidos</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,rolewl</span><span class="cmd-desc">Protege roles clave en el servidor</span></div>
                 </div>
             </div>
 
-            <!-- Configuración y Seguridad -->
-            <div class="cmd-card show" data-category="seguridad">
+            <!-- Utilidades y Perfil -->
+            <div class="cmd-card show">
                 <div class="cmd-card-header">
-                    <h3>🔒 Seguridad & Servidor</h3>
+                    <h3>✨ Utilidades & Historiales</h3>
                 </div>
-                <div class="cmd-card-desc">Protección contra nuke y configuraciones automáticas.</div>
+                <div class="cmd-card-desc">Consultas de actividad y registros estéticos.</div>
                 <div class="cmd-list">
-                    <div class="cmd-item"><span class="cmd-name">,antinuke</span><span class="cmd-desc">Administra la whitelist antinuke</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,rolewl</span><span class="cmd-desc">Protege roles contra asignación no autorizada</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,autorole</span><span class="cmd-desc">Configura roles automáticos para miembros/bots</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,bienvenida</span><span class="cmd-desc">Configura canal de bienvenida</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,owner</span><span class="cmd-desc">Gestiona dueños del bot</span></div>
-                </div>
-            </div>
-
-            <!-- Utilidades y Diversión -->
-            <div class="cmd-card show" data-category="utilidades">
-                <div class="cmd-card-header">
-                    <h3>⚡ Utilidades & Diversión</h3>
-                </div>
-                <div class="cmd-card-desc">Información del servidor y comandos interactivos.</div>
-                <div class="cmd-list">
-                    <div class="cmd-item"><span class="cmd-name">,serverinfo</span><span class="cmd-desc">Información detallada del servidor</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,userinfo</span><span class="cmd-desc">Información de un usuario</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,roles</span><span class="cmd-desc">Lista paginada de roles</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,kill</span><span class="cmd-desc">Comando interactivo con opción de venganza</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,menu</span><span class="cmd-desc">Muestra el menú principal de ayuda</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,ping</span><span class="cmd-desc">Muestra la latencia actual del bot</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,activos / inactivos</span><span class="cmd-desc">Ranking de actividad de mensajes</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,avatars</span><span class="cmd-desc">Muestra mosaico del historial de avatares</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,names</span><span class="cmd-desc">Muestra historial de nombres y apodos</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,clearavatars</span><span class="cmd-desc">Limpia registros de avatares de un usuario</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,clearnames</span><span class="cmd-desc">Limpia registros de nombres de un usuario</span></div>
                 </div>
             </div>
 
@@ -171,10 +155,10 @@
 
     <!-- Footer -->
     <footer>
-        <span>MISS ME BOT</span> • Discord • Crear, moderar, disfrutar
+        <span>MISS ME BOT</span> • Minimalismo y poder para Discord
     </footer>
 
-    <!-- Script para el buscador en tiempo real -->
+    <!-- Script de búsqueda funcional -->
     <script>
         function filterCommands() {
             let input = document.getElementById('commandSearch').value.toLowerCase();

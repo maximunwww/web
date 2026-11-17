@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MISS ME BOT - El poder de la simplicidad en Discord</title>
+    <title>MISS ME BOT - El poder de la programacion en Discord</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -27,8 +27,8 @@
     <section class="hero">
         <div class="hero-content">
             <div class="hero-tag">● DISEÑADO PARA COMUNIDADES EXIGENTES</div>
-            <h1>Tu servidor. <span>Más limpio, seguro y potente.</span></h1>
-            <p>Miss me bot nació para ofrecer una experiencia minimalista sin rodeos. Control absoluto de salas de voz, protección anti-nuke estricta y herramientas que tu comunidad amará.</p>
+            <h1>Tu servidor. <span>Más limpio, seguro y potente</span></h1>
+            <p>Miss me bot un bot que lo puede todo!</p>
             <div class="hero-buttons">
                 <a href="https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands" target="_blank" class="btn-primary">Añadir a Discord ↗</a>
                 <a href="#comandos" class="btn-secondary">Explorar comandos ↓</a>
@@ -49,7 +49,7 @@
                 <img src="assets/avatar.png" alt="Avatar Bot" class="mockup-bot-avatar">
                 <div>
                     <div class="mockup-bot-name">MISS ME BOT</div>
-                    <div class="mockup-bot-desc">Estética y rendimiento en armonía</div>
+                    <div class="mockup-bot-desc">Estética y rendimiento</div>
                 </div>
             </div>
             <div class="mockup-command-box">
@@ -72,19 +72,19 @@
     <!-- Sección de Propósito / Por qué elegirlo -->
     <section class="about-section" id="about">
         <div class="section-title">¿Por qué elegir Miss me bot?</div>
-        <div class="section-subtitle">Bot completo para garantizar la seguridad y divercion en tus servidores</div>
+        <div class="section-subtitle">Bot completo para garantizar la seguridad y la divercion en tus servidores</div>
 
         <div class="about-grid">
             <div class="about-card">
-                <h3>⚡ Cero Lag, 100% Optimizado</h3>
+                <h3>⚡ Cero Lag</h3>
                 <p>Programado muy bien para garantizar respuestas instantáneas sin retrasos molestos en tus canales</p>
             </div>
             <div class="about-card">
-                <h3>🎧 Salas de Voz Inteligentes</h3>
+                <h3>🎧 Salas de Voz</h3>
                 <p>Tus usuarios entran al canal generador y obtienen su propia sala privada con un panel de control interactivo en Discord</p>
             </div>
             <div class="about-card">
-                <h3>🛡️ Seguridad Inquebrantable</h3>
+                <h3>🛡️ Seguridad extrema</h3>
                 <p>Protección contra ataques masivos antinuke y listas blancas estrictas para mantener a salvo los roles importantes de tu servidor</p>
             </div>
         </div>
@@ -111,13 +111,21 @@
                     <div class="cmd-item"><span class="cmd-name">,menu</span><span class="cmd-desc">menú principal</span></div>
                     <div class="cmd-item"><span class="cmd-name">,help</span><span class="cmd-desc">información y soporte</span></div>
                     <div class="cmd-item"><span class="cmd-name">,ping</span><span class="cmd-desc">latencia del bot</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,roles</span><span class="cmd-desc">lista de roles </span></div>
+                    <div class="cmd-item"><span class="cmd-name">,server</span><span class="cmd-desc">información detallada del servidor</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,userinfo</span><span class="cmd-desc">información básica de un usuario</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,vanity</span><span class="cmd-desc">mostrar invitación vanity del servidor</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,announce</span><span class="cmd-desc">enviar un anuncio en embed</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,statschannels</span><span class="cmd-desc">canales de estadísticas en vivo</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,roles</span><span class="cmd-desc">lista de roles</span></div>
                     <div class="cmd-item"><span class="cmd-name">,autorole</span><span class="cmd-desc">configurar rol automático</span></div>
                     <div class="cmd-item"><span class="cmd-name">,bienvenida</span><span class="cmd-desc">configurar canal de bienvenida</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,boostchannel</span><span class="cmd-desc">configurar canal de avisos de boost</span></div>
                     <div class="cmd-item"><span class="cmd-name">,activos</span><span class="cmd-desc">miembros más activos</span></div>
                     <div class="cmd-item"><span class="cmd-name">,inactivos</span><span class="cmd-desc">miembros inactivos</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,avatars</span><span class="cmd-desc">historial de avatares</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,names</span><span class="cmd-desc">historial de nombres y apodos</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,avatars</span><span class="cmd-desc">historial de avatares con el bot</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,names</span><span class="cmd-desc">historial de nombres y apodos con el bot</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,clearnames</span><span class="cmd-desc">limpiar historial de nombres</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,clearavatars</span><span class="cmd-desc">limpiar historial de avatares del bot</span></div>
                     <div class="cmd-item"><span class="cmd-name">,clear</span><span class="cmd-desc">purgar chat completo</span></div>
                     <div class="cmd-item"><span class="cmd-name">,kick</span><span class="cmd-desc">expulsar miembro</span></div>
                 </div>
@@ -144,29 +152,67 @@
                 </div>
                 <div class="cmd-card-desc">Sanciones avanzadas, antinuke y whitelist</div>
                 <div class="cmd-list">
-                    <div class="cmd-item"><span class="cmd-name">,ban</span><span class="cmd-desc">banear miembro</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,ban</span><span class="cmd-desc">banear miembro o ver lista</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,uba</span><span class="cmd-desc">desbaneo masivo</span></div>
                     <div class="cmd-item"><span class="cmd-name">,timeout</span><span class="cmd-desc">silenciar miembro</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,untimeout</span><span class="cmd-desc">quitar silencio a miembro</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,uta</span><span class="cmd-desc">quitar silencio a todos</span></div>
                     <div class="cmd-item"><span class="cmd-name">,lock</span><span class="cmd-desc">bloquear canal</span></div>
                     <div class="cmd-item"><span class="cmd-name">,unlock</span><span class="cmd-desc">desbloquear canal</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,safe</span><span class="cmd-desc">bloqueo estricto de canal</span></div>
                     <div class="cmd-item"><span class="cmd-name">,antinuke</span><span class="cmd-desc">gestión de lista antinuke</span></div>
-                    <div class="cmd-item"><span class="cmd-name">,hb</span><span class="cmd-desc">aplicar hardban</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,antibot</span><span class="cmd-desc">activar o desactivar antibots no autorizados</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,hb</span><span class="cmd-desc">aplicar hardban estricto</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,black</span><span class="cmd-desc">blacklist global de usuarios</span></div>
                     <div class="cmd-item"><span class="cmd-name">,an</span><span class="cmd-desc">gestión de whitelist canales/rolewl</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,an links</span><span class="cmd-desc">filtro de enlaces de otros servidores</span></div>
                     <div class="cmd-item"><span class="cmd-name">,rolewl</span><span class="cmd-desc">whitelist de roles protegidos</span></div>
                 </div>
             </div>
 
-            <!-- Gestión de Roles (,r) & Diversión -->
+            <!-- Gestión de Roles (,r) -->
             <div class="cmd-card show">
                 <div class="cmd-card-header">
-                    <h3>🏷️ Gestión de Roles & Diversión</h3>
+                    <h3>🏷️ Gestión de Roles</h3>
                 </div>
-                <div class="cmd-card-desc">Gestión rápida de roles e interacciones.</div>
+                <div class="cmd-card-desc">Gestión rápida de roles y reinicio de listas.</div>
                 <div class="cmd-list">
                     <div class="cmd-item"><span class="cmd-name">,r create</span><span class="cmd-desc">crear un nuevo rol</span></div>
                     <div class="cmd-item"><span class="cmd-name">,r delete</span><span class="cmd-desc">eliminar un rol</span></div>
                     <div class="cmd-item"><span class="cmd-name">,r rename</span><span class="cmd-desc">renombrar un rol existente</span></div>
                     <div class="cmd-item"><span class="cmd-name">,r add</span><span class="cmd-desc">asignar rol a usuario</span></div>
                     <div class="cmd-item"><span class="cmd-name">,r remove</span><span class="cmd-desc">retirar rol a usuario</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,r antinuke</span><span class="cmd-desc">reiniciar lista antinuke del servidor</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,r owner</span><span class="cmd-desc">reiniciar lista de owners</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,r wl</span><span class="cmd-desc">reiniciar whitelists del servidor</span></div>
+                </div>
+            </div>
+
+            <!-- Social & Utilidades -->
+            <div class="cmd-card show">
+                <div class="cmd-card-header">
+                    <h3>🎭 Social & Utilidades</h3>
+                </div>
+                <div class="cmd-card-desc">Interacciones sociales, filtros visuales y utilidades.</div>
+                <div class="cmd-list">
+                    <div class="cmd-item"><span class="cmd-name">,afk</span><span class="cmd-desc">establecer estado de ausencia</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,steal</span><span class="cmd-desc">copiar emoji de otro servidor</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,marry</span><span class="cmd-desc">proponer matrimonio a un usuario</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,divorce</span><span class="cmd-desc">divorciarte de tu pareja actual</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,marriage</span><span class="cmd-desc">ver estado civil y pareja</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,ship</span><span class="cmd-desc">Porcentaje que tienes en el amor con algun usuario</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,kill</span><span class="cmd-desc">eliminar a alguien</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,hug</span><span class="cmd-desc">dar un abrazo</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,slap</span><span class="cmd-desc">dar una bofetada interactiva</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,pat</span><span class="cmd-desc">dar una caricia a un usuario</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,kiss</span><span class="cmd-desc">dar un beso a un usuario</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,jail</span><span class="cmd-desc">aplicar filtro de rejas en una imagen</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,wasted</span><span class="cmd-desc">aplicar filtro wasted en una imagen</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,blur</span><span class="cmd-desc">aplicar desenfoque a una imagen</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,8ball</span><span class="cmd-desc">consultar a la bola 8 mágica</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,choose</span><span class="cmd-desc">elegir al azar entre varias opciones</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,reverse</span><span class="cmd-desc">invertir el orden de un texto</span></div>
+                    <div class="cmd-item"><span class="cmd-name">,embed</span><span class="cmd-desc">enviar mensaje con el bot</span></div>
                 </div>
             </div>
 

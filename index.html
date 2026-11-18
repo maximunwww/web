@@ -624,7 +624,7 @@
             </button>
             <div id="discordUserPill" class="user-pill" onclick="toggleDiscordLogin()" title="Clic para cerrar sesión">
                 <img id="loggedUserAvatar" src="assets/avatar.png" alt="Avatar">
-                <span id="loggedUserName">sanchz</span>
+                <span id="loggedUserName">Usuario</span>
             </div>
             <a id="navInviteBtn" href="https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands" target="_blank" class="btn-invite-nav">Invitar bot</a>
         </div>
@@ -934,9 +934,9 @@
         <section class="dashboard-section">
 
             <div id="dashLoginGate" class="login-gate-card">
-                <div class="hero-tag" style="margin-bottom: 1.2rem;">● ACCESO RESTRINGIDO A DUEÑOS</div>
+                <div class="hero-tag" style="margin-bottom: 1.2rem;">● PANEL DE CONTROL DE SERVIDORES</div>
                 <h2>Conecta tu cuenta de Discord</h2>
-                <p>Inicia sesión para cargar los servidores donde eres dueño y aplicar cambios directamente en Miss Me Bot.</p>
+                <p>Inicia sesión con tu cuenta de Discord para cargar automáticamente los servidores donde eres dueño o editor autorizado y configurar las bienvenidas.</p>
                 <button class="btn-primary" style="border: none; cursor: pointer;" onclick="toggleDiscordLogin()">
                     Iniciar sesión con Discord ↗
                 </button>
@@ -1128,23 +1128,24 @@
 
     <script>
         /* ==========================================
-           CONFIGURACIÓN DE CONEXIÓN CON TU BOT (botnuevo.py)
+           1. CONFIGURACIÓN DE TU BOT Y DISCORD OAUTH2
            ========================================== */
-        const BOT_API_URL = "http://127.0.0.1:8000";
+        // Reemplaza esto con la URL https:// que te imprime la consola de Katapum (sin barra al final)
+        const BOT_API_URL = "https://PEGA_AQUI_TU_URL_DE_NGROK.ngrok-free.app";
         const BOT_API_KEY = "missme_secret_control_token_2026";
         const DISCORD_CLIENT_ID = "1551781231384068097";
 
-        // Usuario autenticado (se llena con OAuth2 de Discord o con tu ID de dueño)
-        let currentUser = null;
-        let botOnline = false;
+        // Debe coincidir 100% con la URL registrada en Discord Developer Portal -> OAuth2 -> Redirects
+        const REDIRECT_URI = window.location.origin + window.location.pathname;
 
-        // Mapa aislado por guild_id: NUNCA se mezclan datos entre servidores
+        let currentUser = null;
+        let discordAccessToken = null;
         let guildsMap = {};
         let selectedGuildId = null;
 
         const sampleMembers = [
-            { mention: "@chetitos", name: "chetitos", count: 251, avatar: "assets/avatar.png" },
-            { mention: "@valeria", name: "valeria", count: 252, avatar: "assets/gatino window.webp" }
+            { mention: "@usuario1", name: "usuario1", count: 251, avatar: "assets/avatar.png" },
+            { mention: "@usuario2", name: "usuario2", count: 252, avatar: "assets/gatino window.webp" }
         ];
         let sampleIdx = 0;
 
@@ -1209,11 +1210,13 @@
         }
 
         /* ==========================================
-           LOGIN CON DISCORD + CARGA REAL DESDE EL BOT
+           2. LOGIN REAL CON DISCORD OAUTH2 (PARA TODOS)
            ========================================== */
-        async function toggleDiscordLogin() {
+        function toggleDiscordLogin() {
             if (currentUser) {
+                localStorage.removeItem("discord_token");
                 currentUser = null;
+                discordAccessToken = null;
                 guildsMap = {};
                 selectedGuildId = null;
                 document.getElementById('discordLoginBtn').style.display = 'inline-flex';
@@ -1223,23 +1226,57 @@
                 return;
             }
 
-            // En producción aquí rediriges a Discord OAuth2:
-            // window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin + window.location.pathname)}&response_type=token&scope=identify%20guilds`;
-            // Sesión vinculada a tu cuenta owner (TU_USER_ID en botnuevo.py)
-            currentUser = {
-                id: "1371324060788719669",
-                username: "sanchz",
-                avatar: "assets/avatar.png"
-            };
+            const oauthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds`;
+            window.location.href = oauthUrl;
+        }
 
-            document.getElementById('discordLoginBtn').style.display = 'none';
-            document.getElementById('discordUserPill').style.display = 'inline-flex';
-            document.getElementById('loggedUserName').textContent = `${currentUser.username} (Salir)`;
-            document.getElementById('loggedUserAvatar').src = currentUser.avatar;
-            document.getElementById('dashLoginGate').style.display = 'none';
-            document.getElementById('dashMainContent').style.display = 'block';
+        async function initDiscordSession() {
+            const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            const tokenFromUrl = hashParams.get("access_token");
 
-            await fetchGuildsFromBot();
+            if (tokenFromUrl) {
+                localStorage.setItem("discord_token", tokenFromUrl);
+                window.history.replaceState({}, document.title, window.location.pathname);
+                switchBot('dashboard');
+            }
+
+            const savedToken = localStorage.getItem("discord_token");
+            if (!savedToken) return;
+
+            discordAccessToken = savedToken;
+
+            try {
+                const userRes = await fetch("https://discord.com/api/users/@me", {
+                    headers: { Authorization: `Bearer ${discordAccessToken}` }
+                });
+
+                if (!userRes.ok) {
+                    localStorage.removeItem("discord_token");
+                    return;
+                }
+
+                const userData = await userRes.json();
+                const avatarUrl = userData.avatar
+                    ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
+                    : "assets/avatar.png";
+
+                currentUser = {
+                    id: userData.id,
+                    username: userData.global_name || userData.username,
+                    avatar: avatarUrl
+                };
+
+                document.getElementById('discordLoginBtn').style.display = 'none';
+                document.getElementById('discordUserPill').style.display = 'inline-flex';
+                document.getElementById('loggedUserName').textContent = `${currentUser.username} (Salir)`;
+                document.getElementById('loggedUserAvatar').src = currentUser.avatar;
+                document.getElementById('dashLoginGate').style.display = 'none';
+                document.getElementById('dashMainContent').style.display = 'block';
+
+                await fetchGuildsFromBot();
+            } catch (err) {
+                console.error("Error verificando sesión de Discord:", err);
+            }
         }
 
         async function fetchGuildsFromBot() {
@@ -1248,16 +1285,25 @@
 
             try {
                 const res = await fetch(`${BOT_API_URL}/api/guilds/${currentUser.id}`, {
-                    headers: { "X-API-Key": BOT_API_KEY }
+                    headers: {
+                        "X-API-Key": BOT_API_KEY,
+                        "ngrok-skip-browser-warning": "true"
+                    }
                 });
-                if (!res.ok) throw new Error("API error");
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
 
-                botOnline = true;
                 dot.classList.remove('offline');
-                statusText.textContent = `Conectado en vivo a Miss Me Bot (${data.guilds.length} servidores)`;
+                statusText.textContent = `Conectado en vivo como ${currentUser.username} (${data.guilds.length} servidores disponibles)`;
 
                 guildsMap = {};
+                if (data.guilds.length === 0) {
+                    document.getElementById('guildSelect').innerHTML = `<option value="">No tienes servidores con Miss Me Bot instalado</option>`;
+                    document.getElementById('editingGuildBadge').textContent = "Invita el bot a tu servidor primero";
+                    return;
+                }
+
                 data.guilds.forEach(g => {
                     const base = createDefaultGuildConfig(g.name);
                     const saved = g.config || {};
@@ -1278,30 +1324,9 @@
 
                 populateGuildSelector();
             } catch (err) {
-                // Si el bot local aún no está encendido, carga modo vista previa aislado por ID
-                botOnline = false;
                 dot.classList.add('offline');
-                statusText.textContent = "Bot local desconectado (en cuanto enciendas botnuevo.py se sincronizará automático)";
-
-                guildsMap = {
-                    "1001": {
-                        id: "1001",
-                        name: "Only m13!!",
-                        is_owner: true,
-                        channels: [{ id: "ch1", name: "#bienvenida" }, { id: "ch2", name: "#general" }],
-                        members: [{ id: "201", name: "chetitos", display_name: "chetitos" }, { id: "202", name: "valeria", display_name: "valeria" }],
-                        config: { ...createDefaultGuildConfig("Only m13!!"), channel_id: "ch1" }
-                    },
-                    "1002": {
-                        id: "1002",
-                        name: "NarcoEmpresa HQ",
-                        is_owner: true,
-                        channels: [{ id: "ch3", name: "#entradas" }, { id: "ch4", name: "#chat" }],
-                        members: [{ id: "203", name: "admin_rx", display_name: "admin_rx" }],
-                        config: { ...createDefaultGuildConfig("NarcoEmpresa HQ"), channel_id: "ch3", outside_text: "bienvenido {user}" }
-                    }
-                };
-                populateGuildSelector();
+                statusText.innerHTML = `No se pudo conectar con la API del bot en <code>${BOT_API_URL}</code>. Revisa que el bot esté encendido en Katapum.`;
+                document.getElementById('guildSelect').innerHTML = `<option value="">Sin conexión con el servidor del bot</option>`;
             }
         }
 
@@ -1321,7 +1346,6 @@
         }
 
         function switchSelectedGuild() {
-            // Guarda el estado actual antes de cambiar de servidor
             syncFormToCurrentGuild();
             selectedGuildId = document.getElementById('guildSelect').value;
             loadGuildIntoForm(selectedGuildId);
@@ -1334,17 +1358,14 @@
 
             document.getElementById('editingGuildBadge').textContent = `${guild.name} (ID: ${guild.id})`;
 
-            // Cargar canales exclusivos de ESTE servidor
             const chSel = document.getElementById('wChannel');
             chSel.innerHTML = guild.channels.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
             chSel.value = cfg.channel_id || (guild.channels[0]?.id || "");
 
-            // Cargar miembros exclusivos de ESTE servidor para autorizar editores
             const memSel = document.getElementById('memberPicker');
             memSel.innerHTML = guild.members.map(m => `<option value="${m.id}">${m.display_name} (@${m.name})</option>`).join('');
             document.getElementById('ownerEditorsSection').style.display = guild.is_owner ? 'block' : 'none';
 
-            // Cargar los valores aislados de ESTE servidor en los inputs
             document.getElementById('wCounter').checked = !!cfg.show_counter;
             document.getElementById('wOutside').value = cfg.outside_text;
             document.getElementById('wDesc').value = cfg.embed_desc;
@@ -1354,7 +1375,6 @@
             document.getElementById('wBtnLabel').value = cfg.button_label;
             document.getElementById('wBtnUrl').value = cfg.button_url;
 
-            // Miniaturas de galería de este servidor
             if (cfg.default_avatar_url) {
                 document.getElementById('defaultAvatarMini').src = cfg.default_avatar_url;
                 document.getElementById('defaultAvatarMini').style.display = 'block';
@@ -1556,7 +1576,8 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-API-Key": BOT_API_KEY
+                        "X-API-Key": BOT_API_KEY,
+                        "ngrok-skip-browser-warning": "true"
                     },
                     body: JSON.stringify({
                         owner_id: currentUser.id,
@@ -1581,11 +1602,14 @@
                 toast.innerHTML = `✅ Guardado en <strong>Miss Me Bot</strong> exclusivamente para <strong>${guild.name}</strong> (<code>${guild.id}</code>).`;
             } catch (e) {
                 toast.style.display = 'block';
-                toast.innerHTML = `⚠️ Cambios guardados localmente para <strong>${guild.name}</strong>. Enciende <code>botnuevo.py</code> para aplicarlos en Discord.`;
+                toast.innerHTML = `❌ No se pudo guardar: verifica que <code>BOT_API_URL</code> tenga la URL activa de ngrok y el bot esté encendido.`;
             }
 
             setTimeout(() => { toast.style.display = 'none'; }, 4500);
         }
+
+        // Verificar sesión automáticamente al cargar la página
+        window.addEventListener("DOMContentLoaded", initDiscordSession);
     </script>
 </body>
 </html>

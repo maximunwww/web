@@ -773,7 +773,7 @@
 
         .host-guilds-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1rem;
         }
 
@@ -784,7 +784,7 @@
             padding: 1.1rem;
             display: flex;
             gap: 12px;
-            align-items: center;
+            align-items: flex-start;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -801,6 +801,24 @@
             object-fit: cover;
             border: 1px solid var(--border-color);
             flex-shrink: 0;
+        }
+
+        .host-guild-link {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.78rem;
+            font-family: monospace;
+            color: var(--text-primary);
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .host-guild-link-muted {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.76rem;
+            font-family: monospace;
+            color: var(--text-muted);
         }
 
         .host-toolbar {
@@ -1429,7 +1447,7 @@
                     <div class="host-side-metrics">
                         <div class="host-side-row">
                             <span>Estado API</span>
-                            <strong id="hostApiState">ONLINE</strong>
+                            <strong id="hostApiState">OFFLINE</strong>
                         </div>
                         <div class="host-side-row">
                             <span>Latencia bot</span>
@@ -1711,6 +1729,16 @@
             }
         }
 
+        function extractServerLink(g) {
+            const raw = g.invite_url || g.invite || g.vanity_url || g.url || "";
+            if (!raw) return "";
+            const trimmed = String(raw).trim();
+            if (!trimmed) return "";
+            if (/^https?:\/\//i.test(trimmed)) return trimmed;
+            const code = trimmed.replace(/^discord\.gg\//i, "");
+            return `https://discord.gg/${code}`;
+        }
+
         function registerGuildsIntoMap(rawList, forceIncludeAllForHost = false) {
             if (!Array.isArray(rawList)) return;
 
@@ -1730,6 +1758,7 @@
                     icon: g.icon || (existing ? existing.icon : "assets/avatar.png"),
                     owner: g.owner || (existing ? existing.owner : "Dueño del servidor"),
                     member_count: g.member_count ?? (Array.isArray(g.members) ? g.members.length : (existing ? existing.member_count : 0)),
+                    invite_url: extractServerLink(g) || (existing ? existing.invite_url : ""),
                     is_owner: Boolean(g.is_owner) || forceIncludeAllForHost || isHostAccount(),
                     channels: channelsList,
                     members: (Array.isArray(g.members) && g.members.length) ? g.members : (existing ? existing.members : []),
@@ -1796,7 +1825,7 @@
                 populateGuildSelector();
             } catch (err) {
                 dot.classList.add('offline');
-                statusText.innerHTML = `No se pudo conectar con la API del bot en <code>${BOT_API_URL}</code>. Revisa que el bot esté encendido`;
+                statusText.innerHTML = `No se pudo conectar con la API del bot en <code>${BOT_API_URL}</code>. Revisa que el bot y el túnel estén activos`;
                 document.getElementById('guildSelect').innerHTML = `<option value="">Sin conexión con el servidor del bot</option>`;
             }
         }
@@ -2103,78 +2132,50 @@
         async function refreshMissMeHostData() {
             if (!isHostAccount()) return;
 
+            const headers = {
+                "X-API-Key": BOT_API_KEY,
+                "ngrok-skip-browser-warning": "true"
+            };
+
+            let apiReachable = false;
+            let statsData = {};
+
             try {
-                const [statsRes, statusRes, srvRes] = await Promise.all([
-                    fetch(`${BOT_API_URL}/api/host/stats?host_id=${currentUser.id}`, {
-                        headers: {
-                            "X-API-Key": BOT_API_KEY,
-                            "ngrok-skip-browser-warning": "true"
-                        }
-                    }),
-                    fetch(`${BOT_API_URL}/api/status`, {
-                        headers: {
-                            "X-API-Key": BOT_API_KEY,
-                            "ngrok-skip-browser-warning": "true"
-                        }
-                    }).catch(() => null),
-                    fetch(`${BOT_API_URL}/api/servers`, {
-                        headers: {
-                            "X-API-Key": BOT_API_KEY,
-                            "ngrok-skip-browser-warning": "true"
-                        }
-                    }).catch(() => null)
-                ]);
+                const statsRes = await fetch(`${BOT_API_URL}/api/host/stats?host_id=${currentUser.id}`, { headers });
+                if (statsRes.ok) {
+                    statsData = await statsRes.json();
+                    apiReachable = true;
+                }
+            } catch (e) {
+                apiReachable = false;
+            }
 
-                if (!statsRes.ok) throw new Error(`HTTP ${statsRes.status}`);
-                const data = await statsRes.json();
-
-                if (statusRes && statusRes.ok) {
+            try {
+                const statusRes = await fetch(`${BOT_API_URL}/api/status`, { headers });
+                if (statusRes.ok) {
                     const st = await statusRes.json();
-                    document.getElementById('hostApiState').textContent = st.online ? 'ONLINE' : 'OFFLINE';
+                    apiReachable = true;
+                    document.getElementById('hostApiState').textContent = st.online === false ? 'OFFLINE' : 'ONLINE';
                     document.getElementById('hostBotLatency').textContent = `${st.latency_ms ?? 0}ms`;
-                } else {
+                } else if (apiReachable) {
                     document.getElementById('hostApiState').textContent = 'ONLINE';
                 }
-
-                const mergedById = new Map();
-                const addSrv = (s) => {
-                    if (!s || s.id === undefined || s.id === null) return;
-                    const sid = String(s.id);
-                    const prev = mergedById.get(sid) || {};
-                    mergedById.set(sid, {
-                        ...prev,
-                        ...s,
-                        id: sid,
-                        name: s.name || prev.name || `Servidor ${sid}`,
-                        icon: s.icon || prev.icon || "assets/avatar.png",
-                        owner: s.owner || prev.owner || "Desconocido",
-                        member_count: s.member_count ?? prev.member_count ?? 0
-                    });
-                };
-
-                if (Array.isArray(data.servers)) data.servers.forEach(addSrv);
-                if (srvRes && srvRes.ok) {
-                    const srvData = await srvRes.json();
-                    if (Array.isArray(srvData.servers)) srvData.servers.forEach(addSrv);
+            } catch (e) {
+                if (apiReachable) {
+                    document.getElementById('hostApiState').textContent = 'ONLINE';
                 }
+            }
 
-                const allHostServers = Array.from(mergedById.values());
-                registerGuildsIntoMap(allHostServers, true);
-                populateGuildSelector();
-
-                renderMissMeHostPanel({
-                    servers: allHostServers,
-                    errors: Array.isArray(data.errors) ? data.errors : [],
-                    commands: Array.isArray(data.commands) ? data.commands : []
-                });
-            } catch (err) {
+            if (!apiReachable) {
                 document.getElementById('hostApiState').textContent = 'OFFLINE';
+                document.getElementById('hostBotLatency').textContent = '—';
                 const fallbackServers = Object.values(guildsMap).map(g => ({
                     id: g.id,
                     name: g.name,
                     icon: g.icon || "assets/avatar.png",
                     owner: g.owner || "Dueño del servidor",
-                    member_count: g.member_count ?? (g.members ? g.members.length : 0)
+                    member_count: g.member_count ?? (g.members ? g.members.length : 0),
+                    invite_url: g.invite_url || ""
                 }));
 
                 renderMissMeHostPanel({
@@ -2182,7 +2183,48 @@
                     errors: [],
                     commands: []
                 });
+                return;
             }
+
+            const mergedById = new Map();
+            const addSrv = (s) => {
+                if (!s || s.id === undefined || s.id === null) return;
+                const sid = String(s.id);
+                const prev = mergedById.get(sid) || {};
+                const link = extractServerLink(s) || prev.invite_url || "";
+                mergedById.set(sid, {
+                    ...prev,
+                    ...s,
+                    id: sid,
+                    name: s.name || prev.name || `Servidor ${sid}`,
+                    icon: s.icon || prev.icon || "assets/avatar.png",
+                    owner: s.owner || prev.owner || "Desconocido",
+                    member_count: s.member_count ?? prev.member_count ?? 0,
+                    invite_url: link
+                });
+            };
+
+            if (Array.isArray(statsData.servers)) statsData.servers.forEach(addSrv);
+
+            try {
+                const srvRes = await fetch(`${BOT_API_URL}/api/servers`, { headers });
+                if (srvRes.ok) {
+                    const srvData = await srvRes.json();
+                    if (Array.isArray(srvData.servers)) srvData.servers.forEach(addSrv);
+                }
+            } catch (e) {
+                // ignora si /api/servers falla tras tener /api/host/stats
+            }
+
+            const allHostServers = Array.from(mergedById.values());
+            registerGuildsIntoMap(allHostServers, true);
+            populateGuildSelector();
+
+            renderMissMeHostPanel({
+                servers: allHostServers,
+                errors: Array.isArray(statsData.errors) ? statsData.errors : [],
+                commands: Array.isArray(statsData.commands) ? statsData.commands : []
+            });
         }
 
         function renderHostCharts(servers, errors, commands) {
@@ -2324,16 +2366,23 @@
             if (servers.length === 0) {
                 serversGrid.innerHTML = `<div class="host-log-item">Sin servidores conectados en este momento</div>`;
             } else {
-                serversGrid.innerHTML = servers.map(s => `
-                    <div class="host-guild-card">
-                        <img class="host-guild-icon" src="${escapeHtml(s.icon || 'assets/avatar.png')}" alt="${escapeHtml(s.name)}">
-                        <div>
-                            <div style="font-weight: 700; font-size: 0.95rem;">${escapeHtml(s.name)}</div>
-                            <div style="color: var(--text-secondary); font-size: 0.82rem; margin-top: 2px;">Dueño: ${escapeHtml(s.owner || 'Desconocido')}</div>
-                            <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;">Miembros: ${escapeHtml(s.member_count ?? 0)}</div>
+                serversGrid.innerHTML = servers.map(s => {
+                    const link = extractServerLink(s);
+                    const linkHtml = link
+                        ? `<a class="host-guild-link" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link)}</a>`
+                        : `<span class="host-guild-link-muted">Sin enlace disponible</span>`;
+                    return `
+                        <div class="host-guild-card">
+                            <img class="host-guild-icon" src="${escapeHtml(s.icon || 'assets/avatar.png')}" alt="${escapeHtml(s.name)}">
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.95rem;">${escapeHtml(s.name)}</div>
+                                <div style="color: var(--text-secondary); font-size: 0.82rem; margin-top: 2px;">Dueño: ${escapeHtml(s.owner || 'Desconocido')}</div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;">Miembros: ${escapeHtml(s.member_count ?? 0)}</div>
+                                ${linkHtml}
+                            </div>
                         </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             }
 
             const errorsList = document.getElementById('hostErrorsList');

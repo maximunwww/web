@@ -1264,20 +1264,13 @@
                 <div class="welcome-grid">
                     <div class="dash-card">
                         <h3>Ajustes del Mensaje</h3>
-                        <p class="dash-sub">Editando servidor: <strong id="editingGuildBadge">—</strong></p>
+                        <p class="dash-sub">Editando servidor: <strong id="editingGuildBadge">—</strong> • Canal configurado por comando en el servidor</p>
 
-                        <div class="row-2">
-                            <div class="form-group">
-                                <label>Canal de Bienvenidas del Servidor</label>
-                                <select id="wChannel" class="dash-select" onchange="syncFormToCurrentGuild()"></select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Contador de Miembros</label>
-                                <div class="toggle-box">
-                                    <span>Mostrar + member #N</span>
-                                    <input type="checkbox" id="wCounter" checked onchange="syncFormToCurrentGuild()">
-                                </div>
+                        <div class="form-group">
+                            <label>Contador de Miembros</label>
+                            <div class="toggle-box">
+                                <span>Mostrar + member #N</span>
+                                <input type="checkbox" id="wCounter" checked onchange="syncFormToCurrentGuild()">
                             </div>
                         </div>
 
@@ -1302,8 +1295,8 @@
                             <div class="form-group">
                                 <label>Color del borde del Embed</label>
                                 <div class="color-box">
-                                    <input type="color" id="wColor" value="#010101" oninput="syncFormToCurrentGuild()">
-                                    <span id="wColorHex" style="font-family: monospace; font-size: 0.88rem;">#010101</span>
+                                    <input type="color" id="wColor" value="#383838" oninput="syncFormToCurrentGuild()">
+                                    <span id="wColorHex" style="font-family: monospace; font-size: 0.88rem;">#383838</span>
                                 </div>
                             </div>
 
@@ -1376,7 +1369,7 @@
 
                     <div class="dash-card preview-card">
                         <h3>Vista Previa en Discord</h3>
-                        <p class="dash-sub">Canal: <strong id="prevChannel">#bienvenida</strong></p>
+                        <p class="dash-sub">Canal: <strong id="prevChannel">Configurar con comando en el servidor</strong></p>
 
                         <div class="discord-box">
                             <div class="dc-msg">
@@ -1577,7 +1570,7 @@
             try {
                 localStorage.setItem(getLocalGuildKey(guildId), JSON.stringify(cfg));
             } catch (_) {
-                // ignora si excede cuota de localStorage (ej. imagen grande en base64)
+                // ignora si excede cuota de localStorage
             }
         }
 
@@ -1604,7 +1597,7 @@
                 channel_id: "",
                 outside_text: "hii, {user}",
                 embed_desc: `𝐬𝐚𝐧𝐜𝐡𝐳\n\nwelcome to **@{server}**\n\nYou know who we are\n\n.gg/{server}`,
-                embed_color: "#010101",
+                embed_color: "#383838",
                 show_counter: true,
                 avatar_mode: "user",
                 default_avatar_url: "",
@@ -1781,7 +1774,7 @@
 
                 const channelsList = (Array.isArray(g.channels) && g.channels.length)
                     ? g.channels
-                    : (existing && existing.channels && existing.channels.length ? existing.channels : [{ id: "", name: "#sin-canales" }]);
+                    : (existing && existing.channels && existing.channels.length ? existing.channels : []);
 
                 guildsMap[gid] = {
                     id: gid,
@@ -1795,7 +1788,7 @@
                     members: (Array.isArray(g.members) && g.members.length) ? g.members : (existing ? existing.members : []),
                     config: {
                         ...mergedCfg,
-                        channel_id: mergedCfg.channel_id ? String(mergedCfg.channel_id) : (channelsList[0]?.id || ""),
+                        channel_id: mergedCfg.channel_id ? String(mergedCfg.channel_id) : "",
                         authorized_editors: (mergedCfg.authorized_editors || []).map(String)
                     }
                 };
@@ -1892,10 +1885,6 @@
 
             document.getElementById('editingGuildBadge').textContent = `${guild.name} (ID: ${guild.id})`;
 
-            const chSel = document.getElementById('wChannel');
-            chSel.innerHTML = guild.channels.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-            chSel.value = cfg.channel_id || (guild.channels[0]?.id || "");
-
             const memSel = document.getElementById('memberPicker');
             memSel.innerHTML = guild.members.map(m => `<option value="${m.id}">${m.display_name} (@${m.name})</option>`).join('');
             document.getElementById('ownerEditorsSection').style.display = (guild.is_owner || isHostAccount()) ? 'block' : 'none';
@@ -1903,7 +1892,7 @@
             document.getElementById('wCounter').checked = !!cfg.show_counter;
             document.getElementById('wOutside').value = cfg.outside_text ?? "";
             document.getElementById('wDesc').value = cfg.embed_desc ?? "";
-            document.getElementById('wColor').value = cfg.embed_color || "#010101";
+            document.getElementById('wColor').value = cfg.embed_color || "#383838";
             document.getElementById('wAvatarMode').value = cfg.avatar_mode || "user";
             document.getElementById('wBtnEnabled').checked = !!cfg.button_enabled;
             document.getElementById('wBtnLabel').value = cfg.button_label ?? "";
@@ -1935,7 +1924,6 @@
             if (!selectedGuildId || !guildsMap[selectedGuildId]) return;
             const cfg = guildsMap[selectedGuildId].config;
 
-            cfg.channel_id = document.getElementById('wChannel').value;
             cfg.show_counter = document.getElementById('wCounter').checked;
             cfg.outside_text = document.getElementById('wOutside').value;
             cfg.embed_desc = document.getElementById('wDesc').value;
@@ -2058,8 +2046,11 @@
             const cfg = guild.config;
             const user = sampleMembers[sampleIdx];
 
-            const chObj = guild.channels.find(c => c.id === cfg.channel_id);
-            document.getElementById('prevChannel').textContent = chObj ? chObj.name : "#bienvenida";
+            const chObj = cfg.channel_id ? guild.channels.find(c => String(c.id) === String(cfg.channel_id)) : null;
+            document.getElementById('prevChannel').textContent = chObj
+                ? chObj.name
+                : (cfg.channel_id ? `#${cfg.channel_id}` : "Configurar con comando en el servidor");
+
             document.getElementById('prevOutside').innerHTML = formatText(cfg.outside_text, user, guild.name);
 
             let descHtml = formatText(cfg.embed_desc, user, guild.name);
@@ -2120,14 +2111,15 @@
                     },
                     body: JSON.stringify({
                         owner_id: currentUser.id,
-                        channel_id: cfg.channel_id,
                         outside_text: cfg.outside_text,
                         embed_desc: cfg.embed_desc,
                         embed_color: cfg.embed_color,
                         show_counter: cfg.show_counter,
                         avatar_mode: cfg.avatar_mode,
                         default_avatar_url: cfg.default_avatar_url || null,
+                        default_avatar_name: cfg.default_avatar_name || null,
                         banner_url: cfg.banner_url || null,
+                        banner_name: cfg.banner_name || null,
                         button_enabled: cfg.button_enabled,
                         button_label: cfg.button_label,
                         button_url: cfg.button_url,
@@ -2145,6 +2137,7 @@
                     };
                 }
                 writeLocalGuildConfig(selectedGuildId, guildsMap[selectedGuildId].config);
+                updateWelcomePreview();
 
                 toast.style.display = 'block';
                 toast.innerHTML = `Guardado en <strong>Miss Me Bot</strong> exclusivamente para <strong>${guild.name}</strong> (<code>${guild.id}</code>)`;

@@ -590,9 +590,6 @@
             display: none;
         }
 
-        /* ==========================================
-           ESTILO PANEL HOST (DASHBOARD MONOCROMÁTICO)
-           ========================================== */
         .host-shell {
             display: grid;
             grid-template-columns: 260px 1fr;
@@ -713,7 +710,7 @@
 
         .host-kpis {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
         }
 
@@ -913,16 +910,16 @@
 
     <div class="bot-switcher-bar">
         <button id="btn-missme" class="switch-btn active" onclick="switchBot('missme')">
-            ● MISS ME BOT
+            MISS ME BOT
         </button>
         <button id="btn-backup" class="switch-btn" onclick="switchBot('backup')">
-            ● BACKUP BOT
+            BACKUP BOT
         </button>
         <button id="btn-dashboard" class="switch-btn" onclick="switchBot('dashboard')">
-            ● BIENVENIDAS (DASHBOARD)
+            BIENVENIDAS (DASHBOARD)
         </button>
         <button id="btn-host" class="switch-btn" style="display: none;" onclick="switchBot('host')">
-            ● PANEL HOST
+            PANEL HOST
         </button>
     </div>
 
@@ -930,12 +927,12 @@
     <div id="view-missme" class="bot-view active-view">
         <section class="hero">
             <div class="hero-content">
-                <div class="hero-tag">● DISEÑADO PARA COMUNIDADES EXIGENTES</div>
-                <h1>Tu servidor. <span>Más limpio, seguro y potente.</span></h1>
+                <div class="hero-tag">DISEÑADO PARA COMUNIDADES EXIGENTES</div>
+                <h1>Tu servidor. <span>Más limpio, seguro y potente</span></h1>
                 <p>Miss me bot un bot que lo puede todo</p>
                 <div class="hero-buttons">
-                    <a href="https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands" target="_blank" class="btn-primary">Añadir a Discord ↗</a>
-                    <a href="#comandos-missme" class="btn-secondary">Explorar comandos ↓</a>
+                    <a href="https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands" target="_blank" class="btn-primary">Añadir a Discord</a>
+                    <a href="#comandos-missme" class="btn-secondary">Explorar comandos</a>
                 </div>
                 <div class="hero-prefix">
                     Prefijo por defecto: <span>,</span>
@@ -1004,7 +1001,7 @@
             <div class="grid-commands" id="commandsGridMissMe">
                 <div class="cmd-card show">
                     <div class="cmd-card-header"><h3>General & Moderación</h3></div>
-                    <div class="cmd-card-desc">Comandos de información, actividad y moderación básica.</div>
+                    <div class="cmd-card-desc">Comandos de información, actividad y moderación básica</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,menu</span><span class="cmd-desc">menú principal</span></div>
                         <div class="cmd-item"><span class="cmd-name">,help</span><span class="cmd-desc">información y soporte</span></div>
@@ -1031,7 +1028,7 @@
 
                 <div class="cmd-card show">
                     <div class="cmd-card-header"><h3>Canales de Voz</h3></div>
-                    <div class="cmd-card-desc">Conexión y configuración de salas temporales.</div>
+                    <div class="cmd-card-desc">Conexión y configuración de salas temporales</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,join</span><span class="cmd-desc">unirse a canal de voz</span></div>
                         <div class="cmd-item"><span class="cmd-name">,leave</span><span class="cmd-desc">salir de canal de voz</span></div>
@@ -1064,7 +1061,7 @@
 
                 <div class="cmd-card show">
                     <div class="cmd-card-header"><h3>Gestión de Roles</h3></div>
-                    <div class="cmd-card-desc">Gestión rápida de roles y reinicio de listas.</div>
+                    <div class="cmd-card-desc">Gestión rápida de roles y reinicio de listas</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,r create</span><span class="cmd-desc">crear un nuevo rol</span></div>
                         <div class="cmd-item"><span class="cmd-name">,r delete</span><span class="cmd-desc">eliminar un rol</span></div>
@@ -1079,7 +1076,7 @@
 
                 <div class="cmd-card show">
                     <div class="cmd-card-header"><h3>Social & Utilidades</h3></div>
-                    <div class="cmd-card-desc">Interacciones sociales, filtros visuales y utilidades.</div>
+                    <div class="cmd-card-desc">Interacciones sociales, filtros visuales y utilidades</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,afk</span><span class="cmd-desc">establecer estado de ausencia</span></div>
                         <div class="cmd-item"><span class="cmd-name">,steal</span><span class="cmd-desc">copiar emoji de otro servidor</span></div>
@@ -1109,12 +1106,12 @@
     <div id="view-backup" class="bot-view">
         <section class="hero">
             <div class="hero-content">
-                <div class="hero-tag">● BOT DE RESPALDO Y RECUPERACIÓN INSTANTÁNEA</div>
+                <div class="hero-tag">BOT DE RESPALDO Y RECUPERACIÓN INSTANTÁNEA</div>
                 <h1>Backup Bot <span>Tu estructura a salvo las 24 horas</span></h1>
-                <p>Trabaja en sincronización directa con Miss Me Bot. Si alguien sin autorización elimina un canal, Backup Bot recibe la alerta interna y lo reconstruye al instante con todos sus permisos y categorías intactos.</p>
+                <p>Trabaja en sincronización directa con Miss Me Bot. Si alguien sin autorización elimina un canal, Backup Bot recibe la alerta interna y lo reconstruye al instante con todos sus permisos y categorías intactos</p>
                 <div class="hero-buttons">
-                    <a href="https://discord.com/api/oauth2/authorize?client_id=1558922334759288923&permissions=8&scope=bot" target="_blank" class="btn-primary">Añadir Backup Bot ↗</a>
-                    <a href="#comandos-backup" class="btn-secondary">Ver comandos ↓</a>
+                    <a href="https://discord.com/api/oauth2/authorize?client_id=1558922334759288923&permissions=8&scope=bot" target="_blank" class="btn-primary">Añadir Backup Bot</a>
+                    <a href="#comandos-backup" class="btn-secondary">Ver comandos</a>
                 </div>
                 <div class="hero-prefix">
                     Prefijo por defecto: <span>,</span> • Sincronización API: <span>ACTIVA</span>
@@ -1183,7 +1180,7 @@
             <div class="grid-commands" id="commandsGridBackup">
                 <div class="cmd-card show">
                     <div class="cmd-card-header"><h3>Gestión de Respaldos</h3></div>
-                    <div class="cmd-card-desc">Creación, eliminación y programación automática de backups.</div>
+                    <div class="cmd-card-desc">Creación, eliminación y programación automática de backups</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,backup</span><span class="cmd-desc">revisa si el servidor tiene un backup activo</span></div>
                         <div class="cmd-item"><span class="cmd-name">,c backup</span><span class="cmd-desc">guarda canales, categorías, roles y permisos</span></div>
@@ -1194,7 +1191,7 @@
 
                 <div class="cmd-card show">
                     <div class="cmd-card-header"><h3>Auditoría & Restauración</h3></div>
-                    <div class="cmd-card-desc">Verificación de integridad y recuperación estructural.</div>
+                    <div class="cmd-card-desc">Verificación de integridad y recuperación estructural</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,check</span><span class="cmd-desc">muestra qué canales, categorías o roles faltan</span></div>
                         <div class="cmd-item"><span class="cmd-name">,check server</span><span class="cmd-desc">muestra lista de lo guardado</span></div>
@@ -1211,11 +1208,11 @@
         <section class="dashboard-section">
 
             <div id="dashLoginGate" class="login-gate-card">
-                <div class="hero-tag" style="margin-bottom: 1.2rem;">● PANEL DE CONTROL DE SERVIDORES</div>
+                <div class="hero-tag" style="margin-bottom: 1.2rem;">PANEL DE CONTROL DE SERVIDORES</div>
                 <h2>Conecta tu cuenta de Discord</h2>
-                <p>Inicia sesión con tu cuenta de Discord para cargar automáticamente los servidores donde eres dueño o editor autorizado y configurar las bienvenidas.</p>
+                <p>Inicia sesión con tu cuenta de Discord para cargar automáticamente los servidores disponibles y configurar las bienvenidas</p>
                 <button class="btn-primary" style="border: none; cursor: pointer;" onclick="toggleDiscordLogin()">
-                    Iniciar sesión con Discord ↗
+                    Iniciar sesión con Discord
                 </button>
             </div>
 
@@ -1235,7 +1232,7 @@
                     </div>
 
                     <div class="owner-block" id="ownerEditorsSection">
-                        <label>Miembros que pueden editar este servidor (Solo Dueño)</label>
+                        <label>Miembros que pueden editar este servidor</label>
                         <div class="editors-controls">
                             <select id="memberPicker" class="dash-select"></select>
                             <button type="button" class="btn-primary" style="padding: 0.65rem 1.2rem; border: none; cursor: pointer; white-space: nowrap;" onclick="addAuthorizedEditor()">
@@ -1384,7 +1381,7 @@
                                     </div>
 
                                     <a href="#" class="dc-link-btn" id="prevBtn" onclick="return false;">
-                                        <span id="prevBtnText">own to vc</span> ↗
+                                        <span id="prevBtnText">own to vc</span>
                                     </a>
                                 </div>
                             </div>
@@ -1401,7 +1398,6 @@
         <section class="dashboard-section">
             <div class="host-shell">
 
-                <!-- Sidebar del Panel Host -->
                 <aside class="host-sidebar">
                     <div class="host-side-profile">
                         <img id="hostSideAvatar" src="assets/avatar.png" alt="Host">
@@ -1446,20 +1442,18 @@
                     </div>
                 </aside>
 
-                <!-- Contenido Principal del Panel Host -->
                 <div class="host-main">
                     <div class="host-header-row">
                         <div>
-                            <div class="hero-tag" style="margin-bottom: 0.45rem;">● TELEMETRÍA EN TIEMPO REAL</div>
+                            <div class="hero-tag" style="margin-bottom: 0.45rem;">TELEMETRÍA EN TIEMPO REAL</div>
                             <div class="section-title" style="margin-bottom: 0.2rem; font-size: 1.9rem;">PANEL HOST</div>
-                            <div class="section-subtitle" style="margin-bottom: 0; font-size: 0.95rem;">Servidores con el bot, estadísticas de fallas y comandos ejecutados</div>
+                            <div class="section-subtitle" style="margin-bottom: 0; font-size: 0.95rem;">Todos los servidores donde está el bot, fallas y comandos ejecutados</div>
                         </div>
                         <button type="button" class="btn-secondary" style="cursor: pointer;" onclick="refreshMissMeHostData()">
                             Actualizar ahora
                         </button>
                     </div>
 
-                    <!-- KPIs Superiores -->
                     <div class="host-kpis">
                         <div class="host-kpi-card">
                             <div class="host-kpi-label">Servidores con el bot</div>
@@ -1478,7 +1472,6 @@
                         </div>
                     </div>
 
-                    <!-- Sub-pestaña 1: Resumen y Gráficos -->
                     <div id="hostPanel-resumen" class="host-tab-panel active">
                         <div class="host-charts-grid">
                             <div class="dash-card">
@@ -1498,19 +1491,16 @@
                         </div>
                     </div>
 
-                    <!-- Sub-pestaña 2: Servidores -->
                     <div id="hostPanel-servers" class="host-tab-panel">
                         <div id="hostServersGrid" class="host-guilds-grid"></div>
                     </div>
 
-                    <!-- Sub-pestaña 3: Fallas del bot -->
                     <div id="hostPanel-errors" class="host-tab-panel">
                         <div class="host-console-box">
                             <div id="hostErrorsList" class="host-log-list"></div>
                         </div>
                     </div>
 
-                    <!-- Sub-pestaña 4: Comandos ejecutados -->
                     <div id="hostPanel-commands" class="host-tab-panel">
                         <div class="host-toolbar">
                             <input type="text" id="hostCommandSearch" class="dash-input" style="max-width: 340px;" placeholder="Filtrar por usuario, comando o respuesta..." oninput="renderHostCommandsList()">
@@ -1553,7 +1543,7 @@
         let sampleIdx = 0;
 
         function isHostAccount() {
-            return Boolean(currentUser && String(currentUser.id) === HOST_USER_ID);
+            return Boolean(currentUser && String(currentUser.id).trim() === HOST_USER_ID);
         }
 
         function updateHostVisibility() {
@@ -1570,7 +1560,7 @@
             }
         }
 
-        function createDefaultGuildConfig(guildName) {
+        function createDefaultGuildConfig() {
             return {
                 channel_id: "",
                 outside_text: "hii, {user}",
@@ -1692,7 +1682,7 @@
                     : "assets/avatar.png";
 
                 currentUser = {
-                    id: String(userData.id),
+                    id: String(userData.id).trim(),
                     username: userData.global_name || userData.username,
                     avatar: avatarUrl
                 };
@@ -1709,24 +1699,57 @@
                 document.getElementById('dashLoginGate').style.display = 'none';
                 document.getElementById('dashMainContent').style.display = 'block';
 
+                await fetchGuildsFromBot();
+
                 if (hostRecognized) {
                     await refreshMissMeHostData();
                     if (hostPollTimer) clearInterval(hostPollTimer);
                     hostPollTimer = setInterval(refreshMissMeHostData, 5000);
                 }
-
-                await fetchGuildsFromBot();
             } catch (err) {
                 console.error("Error verificando sesión de Discord:", err);
             }
         }
 
+        function registerGuildsIntoMap(rawList, forceIncludeAllForHost = false) {
+            if (!Array.isArray(rawList)) return;
+
+            rawList.forEach(g => {
+                if (!g || g.id === undefined || g.id === null) return;
+                const gid = String(g.id);
+                const existing = guildsMap[gid];
+                const base = existing ? existing.config : createDefaultGuildConfig();
+                const saved = g.config || {};
+                const channelsList = (Array.isArray(g.channels) && g.channels.length)
+                    ? g.channels
+                    : (existing && existing.channels && existing.channels.length ? existing.channels : [{ id: "", name: "#sin-canales" }]);
+
+                guildsMap[gid] = {
+                    id: gid,
+                    name: g.name || (existing ? existing.name : `Servidor ${gid}`),
+                    icon: g.icon || (existing ? existing.icon : "assets/avatar.png"),
+                    owner: g.owner || (existing ? existing.owner : "Dueño del servidor"),
+                    member_count: g.member_count ?? (Array.isArray(g.members) ? g.members.length : (existing ? existing.member_count : 0)),
+                    is_owner: Boolean(g.is_owner) || forceIncludeAllForHost || isHostAccount(),
+                    channels: channelsList,
+                    members: (Array.isArray(g.members) && g.members.length) ? g.members : (existing ? existing.members : []),
+                    config: {
+                        ...base,
+                        ...saved,
+                        channel_id: saved.channel_id ? String(saved.channel_id) : (base.channel_id || channelsList[0]?.id || ""),
+                        authorized_editors: (saved.authorized_editors || base.authorized_editors || []).map(String)
+                    }
+                };
+            });
+        }
+
         async function fetchGuildsFromBot() {
             const dot = document.getElementById('botConnDot');
             const statusText = document.getElementById('botConnText');
+            const hostMode = isHostAccount();
 
             try {
-                const endpoint = isHostAccount()
+                const endpoint = hostMode
                     ? `${BOT_API_URL}/api/guilds/${currentUser.id}?all_guilds=1`
                     : `${BOT_API_URL}/api/guilds/${currentUser.id}`;
 
@@ -1740,83 +1763,58 @@
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
 
+                guildsMap = {};
                 let guildList = Array.isArray(data.guilds) ? data.guilds : [];
+                registerGuildsIntoMap(guildList, hostMode);
 
-                if (isHostAccount() && guildList.length === 0) {
+                if (hostMode) {
                     const srvRes = await fetch(`${BOT_API_URL}/api/servers`, {
                         headers: {
                             "X-API-Key": BOT_API_KEY,
                             "ngrok-skip-browser-warning": "true"
                         }
-                    });
-                    if (srvRes.ok) {
+                    }).catch(() => null);
+
+                    if (srvRes && srvRes.ok) {
                         const srvData = await srvRes.json();
-                        guildList = (srvData.servers || []).map(s => ({
-                            id: s.id,
-                            name: s.name,
-                            icon: s.icon,
-                            is_owner: true,
-                            channels: [],
-                            members: [],
-                            config: {}
-                        }));
+                        if (Array.isArray(srvData.servers)) {
+                            registerGuildsIntoMap(srvData.servers, true);
+                        }
                     }
                 }
 
+                const totalCount = Object.keys(guildsMap).length;
                 dot.classList.remove('offline');
-                statusText.textContent = `Conectado en vivo como ${currentUser.username} (${guildList.length} servidores disponibles)`;
+                statusText.textContent = `Conectado en vivo como ${currentUser.username} (${totalCount} servidores donde está el bot)`;
 
-                guildsMap = {};
-                if (guildList.length === 0) {
+                if (totalCount === 0) {
                     document.getElementById('guildSelect').innerHTML = `<option value="">No hay servidores disponibles con Miss Me Bot</option>`;
                     document.getElementById('editingGuildBadge').textContent = "Sin servidores disponibles";
                     return;
                 }
 
-                guildList.forEach(g => {
-                    const base = createDefaultGuildConfig(g.name);
-                    const saved = g.config || {};
-                    const channelsList = Array.isArray(g.channels) && g.channels.length
-                        ? g.channels
-                        : [{ id: "", name: "#sin-canales" }];
-
-                    guildsMap[g.id] = {
-                        id: String(g.id),
-                        name: g.name,
-                        icon: g.icon || "assets/avatar.png",
-                        owner: g.owner || "Dueño del servidor",
-                        member_count: g.member_count ?? (Array.isArray(g.members) ? g.members.length : 0),
-                        is_owner: Boolean(g.is_owner) || isHostAccount(),
-                        channels: channelsList,
-                        members: g.members || [],
-                        config: {
-                            ...base,
-                            ...saved,
-                            channel_id: saved.channel_id ? String(saved.channel_id) : (channelsList[0]?.id || ""),
-                            authorized_editors: (saved.authorized_editors || []).map(String)
-                        }
-                    };
-                });
-
                 populateGuildSelector();
             } catch (err) {
                 dot.classList.add('offline');
-                statusText.innerHTML = `No se pudo conectar con la API del bot en <code>${BOT_API_URL}</code>. Revisa que el bot esté encendido.`;
+                statusText.innerHTML = `No se pudo conectar con la API del bot en <code>${BOT_API_URL}</code>. Revisa que el bot esté encendido`;
                 document.getElementById('guildSelect').innerHTML = `<option value="">Sin conexión con el servidor del bot</option>`;
             }
         }
 
         function populateGuildSelector() {
             const sel = document.getElementById('guildSelect');
+            const prevSelected = selectedGuildId;
             const ids = Object.keys(guildsMap);
+            const hostMode = isHostAccount();
+
             sel.innerHTML = ids.map(id => {
                 const g = guildsMap[id];
-                const roleLabel = isHostAccount() ? 'Host' : (g.is_owner ? 'Dueño' : 'Editor');
+                const roleLabel = hostMode ? 'Host' : (g.is_owner ? 'Dueño' : 'Editor');
                 return `<option value="${g.id}">${g.name} (${roleLabel})</option>`;
             }).join('');
 
             if (ids.length > 0) {
-                selectedGuildId = ids[0];
+                selectedGuildId = (prevSelected && guildsMap[prevSelected]) ? prevSelected : ids[0];
                 sel.value = selectedGuildId;
                 loadGuildIntoForm(selectedGuildId);
             }
@@ -2076,10 +2074,10 @@
                 if (!res.ok) throw new Error("Error HTTP al guardar");
 
                 toast.style.display = 'block';
-                toast.innerHTML = `Guardado en <strong>Miss Me Bot</strong> exclusivamente para <strong>${guild.name}</strong> (<code>${guild.id}</code>).`;
+                toast.innerHTML = `Guardado en <strong>Miss Me Bot</strong> exclusivamente para <strong>${guild.name}</strong> (<code>${guild.id}</code>)`;
             } catch (e) {
                 toast.style.display = 'block';
-                toast.innerHTML = `No se pudo guardar: verifica que <code>BOT_API_URL</code> tenga la URL activa de ngrok y el bot esté encendido.`;
+                toast.innerHTML = `No se pudo guardar: verifica que <code>BOT_API_URL</code> tenga la URL activa de ngrok y el bot esté encendido`;
             }
 
             setTimeout(() => { toast.style.display = 'none'; }, 4500);
@@ -2106,7 +2104,7 @@
             if (!isHostAccount()) return;
 
             try {
-                const [statsRes, statusRes] = await Promise.all([
+                const [statsRes, statusRes, srvRes] = await Promise.all([
                     fetch(`${BOT_API_URL}/api/host/stats?host_id=${currentUser.id}`, {
                         headers: {
                             "X-API-Key": BOT_API_KEY,
@@ -2114,6 +2112,12 @@
                         }
                     }),
                     fetch(`${BOT_API_URL}/api/status`, {
+                        headers: {
+                            "X-API-Key": BOT_API_KEY,
+                            "ngrok-skip-browser-warning": "true"
+                        }
+                    }).catch(() => null),
+                    fetch(`${BOT_API_URL}/api/servers`, {
                         headers: {
                             "X-API-Key": BOT_API_KEY,
                             "ngrok-skip-browser-warning": "true"
@@ -2132,14 +2136,44 @@
                     document.getElementById('hostApiState').textContent = 'ONLINE';
                 }
 
-                renderMissMeHostPanel(data);
+                const mergedById = new Map();
+                const addSrv = (s) => {
+                    if (!s || s.id === undefined || s.id === null) return;
+                    const sid = String(s.id);
+                    const prev = mergedById.get(sid) || {};
+                    mergedById.set(sid, {
+                        ...prev,
+                        ...s,
+                        id: sid,
+                        name: s.name || prev.name || `Servidor ${sid}`,
+                        icon: s.icon || prev.icon || "assets/avatar.png",
+                        owner: s.owner || prev.owner || "Desconocido",
+                        member_count: s.member_count ?? prev.member_count ?? 0
+                    });
+                };
+
+                if (Array.isArray(data.servers)) data.servers.forEach(addSrv);
+                if (srvRes && srvRes.ok) {
+                    const srvData = await srvRes.json();
+                    if (Array.isArray(srvData.servers)) srvData.servers.forEach(addSrv);
+                }
+
+                const allHostServers = Array.from(mergedById.values());
+                registerGuildsIntoMap(allHostServers, true);
+                populateGuildSelector();
+
+                renderMissMeHostPanel({
+                    servers: allHostServers,
+                    errors: Array.isArray(data.errors) ? data.errors : [],
+                    commands: Array.isArray(data.commands) ? data.commands : []
+                });
             } catch (err) {
                 document.getElementById('hostApiState').textContent = 'OFFLINE';
                 const fallbackServers = Object.values(guildsMap).map(g => ({
                     id: g.id,
                     name: g.name,
                     icon: g.icon || "assets/avatar.png",
-                    owner: g.owner || (g.is_owner ? currentUser.username : "Dueño del servidor"),
+                    owner: g.owner || "Dueño del servidor",
                     member_count: g.member_count ?? (g.members ? g.members.length : 0)
                 }));
 
@@ -2210,10 +2244,10 @@
 
             const memCtx = document.getElementById('hostMembersChart');
             if (memCtx) {
-                const topSrv = servers.slice(0, 6);
+                const topSrv = servers.slice(0, 8);
                 const sLabels = topSrv.map(s => s.name || 'Servidor');
                 const sCounts = topSrv.map(s => Number(s.member_count || 0));
-                const palette = ['#ffffff', '#c4c4d4', '#888899', '#555566', '#3a3a48', '#22222d'];
+                const palette = ['#ffffff', '#c4c4d4', '#888899', '#666677', '#4a4a58', '#333340', '#22222d', '#181820'];
 
                 if (hostMembersChartInstance) {
                     hostMembersChartInstance.data.labels = sLabels;
@@ -2251,7 +2285,7 @@
             });
 
             if (filtered.length === 0) {
-                commandsList.innerHTML = `<div class="host-log-item">Aún no hay comandos ejecutados registrados.</div>`;
+                commandsList.innerHTML = `<div class="host-log-item">Aún no hay comandos ejecutados registrados</div>`;
                 return;
             }
 
@@ -2288,7 +2322,7 @@
 
             const serversGrid = document.getElementById('hostServersGrid');
             if (servers.length === 0) {
-                serversGrid.innerHTML = `<div class="host-log-item">Sin servidores conectados en este momento.</div>`;
+                serversGrid.innerHTML = `<div class="host-log-item">Sin servidores conectados en este momento</div>`;
             } else {
                 serversGrid.innerHTML = servers.map(s => `
                     <div class="host-guild-card">
@@ -2304,7 +2338,7 @@
 
             const errorsList = document.getElementById('hostErrorsList');
             if (errors.length === 0) {
-                errorsList.innerHTML = `<div class="host-log-item">Sin fallas registradas en tiempo real.</div>`;
+                errorsList.innerHTML = `<div class="host-log-item">Sin fallas registradas en tiempo real</div>`;
             } else {
                 errorsList.innerHTML = errors.map(err => `
                     <div class="host-log-item">

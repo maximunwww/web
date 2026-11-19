@@ -586,6 +586,135 @@
             display: none;
         }
 
+        /* Área MISS ME HOST (Solo visible para ID 1371324060788719669) */
+        .host-area {
+            margin-top: 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 2rem;
+        }
+
+        .host-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .host-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .host-tab-btn {
+            background: var(--bg-main);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.55rem 1.15rem;
+            border-radius: 8px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .host-tab-btn:hover {
+            border-color: var(--border-highlight);
+            color: var(--text-primary);
+        }
+
+        .host-tab-btn.active {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+        }
+
+        .host-tab-panel {
+            display: none;
+        }
+
+        .host-tab-panel.active {
+            display: block;
+        }
+
+        .host-kpis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .host-kpi-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+        }
+
+        .host-kpi-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .host-kpi-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 0.3rem;
+        }
+
+        .host-guilds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .host-guild-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .host-guild-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .host-log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .host-log-item {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.9rem 1.1rem;
+            font-size: 0.86rem;
+            line-height: 1.45;
+        }
+
+        .host-log-meta {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            margin-bottom: 0.35rem;
+        }
+
         @media (max-width: 900px) {
             .bot-switcher-bar {
                 margin-top: 9.5rem;
@@ -594,7 +723,8 @@
             .owner-topbar,
             .welcome-grid,
             .row-2,
-            .dash-actions {
+            .dash-actions,
+            .host-kpis {
                 grid-template-columns: 1fr;
             }
             .preview-card {
@@ -1117,6 +1247,55 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- ==========================================
+                     AREA EXCLUSIVA: MISS ME HOST (ID: 1371324060788719669)
+                     ========================================== -->
+                <div id="missMeHostArea" class="host-area" style="display: none;">
+                    <div class="host-header-row">
+                        <div>
+                            <div class="hero-tag" style="margin-bottom: 0.5rem;">● PANEL EXCLUSIVO DEL HOST</div>
+                            <h3 style="font-size: 1.5rem;">MISS ME HOST</h3>
+                            <p class="dash-sub" style="margin-bottom: 0;">Estadísticas en tiempo real, servidores con corona/bot, fallas y auditoría de comandos</p>
+                        </div>
+                        <button type="button" class="btn-secondary" style="cursor: pointer;" onclick="refreshMissMeHostData()">
+                            Actualizar en tiempo real
+                        </button>
+                    </div>
+
+                    <div class="host-kpis">
+                        <div class="host-kpi-card">
+                            <div class="host-kpi-label">Servidores activos</div>
+                            <div class="host-kpi-val" id="hostTotalGuilds">0</div>
+                        </div>
+                        <div class="host-kpi-card">
+                            <div class="host-kpi-label">Fallas registradas</div>
+                            <div class="host-kpi-val" id="hostTotalErrors">0</div>
+                        </div>
+                        <div class="host-kpi-card">
+                            <div class="host-kpi-label">Comandos exitosos</div>
+                            <div class="host-kpi-val" id="hostTotalCommands">0</div>
+                        </div>
+                    </div>
+
+                    <div class="host-tabs">
+                        <button type="button" id="hostTabBtn-servers" class="host-tab-btn active" onclick="switchHostTab('servers')">Servidores</button>
+                        <button type="button" id="hostTabBtn-errors" class="host-tab-btn" onclick="switchHostTab('errors')">Fallas del bot</button>
+                        <button type="button" id="hostTabBtn-commands" class="host-tab-btn" onclick="switchHostTab('commands')">Comandos ejecutados</button>
+                    </div>
+
+                    <div id="hostPanel-servers" class="host-tab-panel active">
+                        <div id="hostServersGrid" class="host-guilds-grid"></div>
+                    </div>
+
+                    <div id="hostPanel-errors" class="host-tab-panel">
+                        <div id="hostErrorsList" class="host-log-list"></div>
+                    </div>
+
+                    <div id="hostPanel-commands" class="host-tab-panel">
+                        <div id="hostCommandsList" class="host-log-list"></div>
+                    </div>
+                </div>
             </div>
 
         </section>
@@ -1130,24 +1309,28 @@
         /* ==========================================
            1. CONFIGURACIÓN DE TU BOT Y DISCORD OAUTH2
            ========================================== */
-        // Reemplaza esto con la URL https:// que te imprime la consola de Katapum (sin barra al final)
         const BOT_API_URL = "https://limpness-perfected-congress.ngrok-free.dev";
         const BOT_API_KEY = "missme_secret_control_token_2026";
         const DISCORD_CLIENT_ID = "1551781231384068097";
+        const HOST_USER_ID = "1371324060788719669";
 
-        // Debe coincidir 100% con la URL registrada en Discord Developer Portal -> OAuth2 -> Redirects
         const REDIRECT_URI = window.location.origin + window.location.pathname;
 
         let currentUser = null;
         let discordAccessToken = null;
         let guildsMap = {};
         let selectedGuildId = null;
+        let hostPollTimer = null;
 
         const sampleMembers = [
             { mention: "@usuario1", name: "usuario1", count: 251, avatar: "assets/avatar.png" },
             { mention: "@usuario2", name: "usuario2", count: 252, avatar: "assets/gatino window.webp" }
         ];
         let sampleIdx = 0;
+
+        function isHostAccount() {
+            return Boolean(currentUser && String(currentUser.id) === HOST_USER_ID);
+        }
 
         function createDefaultGuildConfig(guildName) {
             return {
@@ -1214,11 +1397,13 @@
            ========================================== */
         function toggleDiscordLogin() {
             if (currentUser) {
+                if (hostPollTimer) clearInterval(hostPollTimer);
                 localStorage.removeItem("discord_token");
                 currentUser = null;
                 discordAccessToken = null;
                 guildsMap = {};
                 selectedGuildId = null;
+                document.getElementById('missMeHostArea').style.display = 'none';
                 document.getElementById('discordLoginBtn').style.display = 'inline-flex';
                 document.getElementById('discordUserPill').style.display = 'none';
                 document.getElementById('dashLoginGate').style.display = 'block';
@@ -1226,7 +1411,7 @@
                 return;
             }
 
-           const oauthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds&prompt=consent`;
+            const oauthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds&prompt=consent`;
             window.location.href = oauthUrl;
         }
 
@@ -1261,17 +1446,30 @@
                     : "assets/avatar.png";
 
                 currentUser = {
-                    id: userData.id,
+                    id: String(userData.id),
                     username: userData.global_name || userData.username,
                     avatar: avatarUrl
                 };
 
+                const hostRecognized = isHostAccount();
+
                 document.getElementById('discordLoginBtn').style.display = 'none';
                 document.getElementById('discordUserPill').style.display = 'inline-flex';
-                document.getElementById('loggedUserName').textContent = `${currentUser.username} (Salir)`;
+                document.getElementById('loggedUserName').textContent = hostRecognized
+                    ? `${currentUser.username} [HOST] (Salir)`
+                    : `${currentUser.username} (Salir)`;
                 document.getElementById('loggedUserAvatar').src = currentUser.avatar;
                 document.getElementById('dashLoginGate').style.display = 'none';
                 document.getElementById('dashMainContent').style.display = 'block';
+
+                if (hostRecognized) {
+                    document.getElementById('missMeHostArea').style.display = 'block';
+                    await refreshMissMeHostData();
+                    if (hostPollTimer) clearInterval(hostPollTimer);
+                    hostPollTimer = setInterval(refreshMissMeHostData, 5000);
+                } else {
+                    document.getElementById('missMeHostArea').style.display = 'none';
+                }
 
                 await fetchGuildsFromBot();
             } catch (err) {
@@ -1307,10 +1505,12 @@
                 data.guilds.forEach(g => {
                     const base = createDefaultGuildConfig(g.name);
                     const saved = g.config || {};
+                    const canEdit = isHostAccount() || Boolean(g.is_owner) || (saved.authorized_editors || []).map(String).includes(currentUser.id);
                     guildsMap[g.id] = {
                         id: g.id,
                         name: g.name,
-                        is_owner: g.is_owner,
+                        is_owner: Boolean(g.is_owner),
+                        can_edit: canEdit,
                         channels: g.channels.length ? g.channels : [{ id: "", name: "#sin-canales" }],
                         members: g.members || [],
                         config: {
@@ -1335,7 +1535,8 @@
             const ids = Object.keys(guildsMap);
             sel.innerHTML = ids.map(id => {
                 const g = guildsMap[id];
-                return `<option value="${g.id}">${g.name} (${g.is_owner ? 'Dueño' : 'Editor'})</option>`;
+                const roleLabel = isHostAccount() && !g.is_owner ? 'Host Access' : (g.is_owner ? 'Dueño' : 'Editor');
+                return `<option value="${g.id}">${g.name} (${roleLabel})</option>`;
             }).join('');
 
             if (ids.length > 0) {
@@ -1364,7 +1565,7 @@
 
             const memSel = document.getElementById('memberPicker');
             memSel.innerHTML = guild.members.map(m => `<option value="${m.id}">${m.display_name} (@${m.name})</option>`).join('');
-            document.getElementById('ownerEditorsSection').style.display = guild.is_owner ? 'block' : 'none';
+            document.getElementById('ownerEditorsSection').style.display = (guild.is_owner || isHostAccount()) ? 'block' : 'none';
 
             document.getElementById('wCounter').checked = !!cfg.show_counter;
             document.getElementById('wOutside').value = cfg.outside_text;
@@ -1417,7 +1618,7 @@
         function renderAuthorizedEditors(guildId) {
             const guild = guildsMap[guildId];
             const listEl = document.getElementById('editorsList');
-            let html = `<span class="editor-tag owner-badge">👑 Dueño del Servidor</span>`;
+            let html = `<span class="editor-tag owner-badge">Dueño del Servidor</span>`;
 
             guild.config.authorized_editors.forEach(edId => {
                 const found = guild.members.find(m => m.id === edId);
@@ -1599,13 +1800,120 @@
                 if (!res.ok) throw new Error("Error HTTP al guardar");
 
                 toast.style.display = 'block';
-                toast.innerHTML = `✅ Guardado en <strong>Miss Me Bot</strong> exclusivamente para <strong>${guild.name}</strong> (<code>${guild.id}</code>).`;
+                toast.innerHTML = `Guardado en <strong>Miss Me Bot</strong> exclusivamente para <strong>${guild.name}</strong> (<code>${guild.id}</code>).`;
             } catch (e) {
                 toast.style.display = 'block';
-                toast.innerHTML = `❌ No se pudo guardar: verifica que <code>BOT_API_URL</code> tenga la URL activa de ngrok y el bot esté encendido.`;
+                toast.innerHTML = `No se pudo guardar: verifica que <code>BOT_API_URL</code> tenga la URL activa de ngrok y el bot esté encendido.`;
             }
 
             setTimeout(() => { toast.style.display = 'none'; }, 4500);
+        }
+
+        /* ==========================================
+           3. LÓGICA DE MISS ME HOST (SOLO ID 1371324060788719669)
+           ========================================== */
+        function switchHostTab(tabName) {
+            ['servers', 'errors', 'commands'].forEach(t => {
+                document.getElementById('hostTabBtn-' + t).classList.remove('active');
+                document.getElementById('hostPanel-' + t).classList.remove('active');
+            });
+            document.getElementById('hostTabBtn-' + tabName).classList.add('active');
+            document.getElementById('hostPanel-' + tabName).classList.add('active');
+        }
+
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        async function refreshMissMeHostData() {
+            if (!isHostAccount()) return;
+
+            try {
+                const res = await fetch(`${BOT_API_URL}/api/host/stats?host_id=${currentUser.id}`, {
+                    headers: {
+                        "X-API-Key": BOT_API_KEY,
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                renderMissMeHostPanel(data);
+            } catch (err) {
+                const fallbackServers = Object.values(guildsMap).map(g => ({
+                    id: g.id,
+                    name: g.name,
+                    icon: "assets/avatar.png",
+                    owner: g.is_owner ? currentUser.username : "Dueño del servidor",
+                    member_count: g.members ? g.members.length : 0
+                }));
+
+                renderMissMeHostPanel({
+                    servers: fallbackServers,
+                    errors: [],
+                    commands: []
+                });
+            }
+        }
+
+        function renderMissMeHostPanel(data) {
+            const servers = Array.isArray(data.servers) ? data.servers : [];
+            const errors = Array.isArray(data.errors) ? data.errors : [];
+            const commands = Array.isArray(data.commands) ? data.commands : [];
+
+            document.getElementById('hostTotalGuilds').textContent = servers.length;
+            document.getElementById('hostTotalErrors').textContent = errors.length;
+            document.getElementById('hostTotalCommands').textContent = commands.length;
+
+            const serversGrid = document.getElementById('hostServersGrid');
+            if (servers.length === 0) {
+                serversGrid.innerHTML = `<div class="host-log-item">Sin servidores conectados en este momento.</div>`;
+            } else {
+                serversGrid.innerHTML = servers.map(s => `
+                    <div class="host-guild-card">
+                        <img class="host-guild-icon" src="${escapeHtml(s.icon || 'assets/avatar.png')}" alt="${escapeHtml(s.name)}">
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.95rem;">${escapeHtml(s.name)}</div>
+                            <div style="color: var(--text-secondary); font-size: 0.82rem; margin-top: 2px;">Dueño: ${escapeHtml(s.owner || 'Desconocido')}</div>
+                            <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;">Miembros: ${escapeHtml(s.member_count ?? 0)}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const errorsList = document.getElementById('hostErrorsList');
+            if (errors.length === 0) {
+                errorsList.innerHTML = `<div class="host-log-item">Sin fallas registradas en tiempo real.</div>`;
+            } else {
+                errorsList.innerHTML = errors.map(err => `
+                    <div class="host-log-item">
+                        <div class="host-log-meta">${escapeHtml(err.timestamp || err.datetime || '')} • ${escapeHtml(err.command || 'Sistema')}</div>
+                        <div>${escapeHtml(err.message || err.error || '')}</div>
+                    </div>
+                `).join('');
+            }
+
+            const commandsList = document.getElementById('hostCommandsList');
+            if (commands.length === 0) {
+                commandsList.innerHTML = `<div class="host-log-item">Aún no hay comandos ejecutados registrados.</div>`;
+            } else {
+                commandsList.innerHTML = commands.map(cmd => {
+                    const userTag = escapeHtml(cmd.user_tag || cmd.user || 'Usuario');
+                    const cmdName = escapeHtml(cmd.command || '');
+                    const dt = escapeHtml(cmd.timestamp || cmd.datetime || '');
+                    const botMsg = escapeHtml(cmd.bot_response || cmd.response || '');
+                    return `
+                        <div class="host-log-item">
+                            <div class="host-log-meta">(${userTag}) ejecutó (${cmdName}) con éxito (${dt})</div>
+                            <div><strong>Respuesta enviada por el bot:</strong> ${botMsg}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
 
         // Verificar sesión automáticamente al cargar la página

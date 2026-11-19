@@ -6,7 +6,6 @@
     <title>MISS ME & BACKUP BOT - El poder de la simplicidad en Discord</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Selector superior de bots respetando tu estética */
         .bot-switcher-bar {
             display: flex;
             justify-content: center;
@@ -28,7 +27,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
         }
@@ -60,7 +59,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Navbar Actions */
         .nav-actions {
             display: flex;
             align-items: center;
@@ -112,7 +110,6 @@
             object-fit: cover;
         }
 
-        /* Dashboard de Bienvenidas */
         .dashboard-section {
             padding: 7rem 8% 5rem 8%;
             max-width: 1300px;
@@ -586,15 +583,7 @@
             display: none;
         }
 
-        /* Área MISS ME HOST (Solo visible para ID 1371324060788719669) */
-        .host-area {
-            margin-top: 3rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 2rem;
-        }
-
+        /* Vista PANEL HOST */
         .host-header-row {
             display: flex;
             justify-content: space-between;
@@ -602,6 +591,33 @@
             flex-wrap: wrap;
             gap: 1rem;
             margin-bottom: 1.5rem;
+        }
+
+        .host-kpis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .host-kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.1rem 1.3rem;
+        }
+
+        .host-kpi-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .host-kpi-val {
+            font-size: 1.55rem;
+            font-weight: 700;
+            margin-top: 0.3rem;
         }
 
         .host-tabs {
@@ -612,7 +628,7 @@
         }
 
         .host-tab-btn {
-            background: var(--bg-main);
+            background: var(--bg-card);
             color: var(--text-secondary);
             border: 1px solid var(--border-color);
             padding: 0.55rem 1.15rem;
@@ -642,33 +658,6 @@
             display: block;
         }
 
-        .host-kpis {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .host-kpi-card {
-            background: var(--bg-main);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1rem 1.2rem;
-        }
-
-        .host-kpi-label {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-        }
-
-        .host-kpi-val {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 0.3rem;
-        }
-
         .host-guilds-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -676,13 +665,18 @@
         }
 
         .host-guild-card {
-            background: var(--bg-main);
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 1rem;
             display: flex;
             gap: 12px;
             align-items: center;
+            transition: border-color 0.2s;
+        }
+
+        .host-guild-card:hover {
+            border-color: var(--border-highlight);
         }
 
         .host-guild-icon {
@@ -701,10 +695,10 @@
         }
 
         .host-log-item {
-            background: var(--bg-main);
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 0.9rem 1.1rem;
+            border-radius: 14px;
+            padding: 0.95rem 1.15rem;
             font-size: 0.86rem;
             line-height: 1.45;
         }
@@ -735,7 +729,6 @@
 </head>
 <body>
 
-    <!-- Navbar (conservando exactamente tu logo assets/avatar.png) -->
     <nav>
         <div class="nav-logo">
             <img src="assets/avatar.png" alt="Logo">
@@ -745,6 +738,7 @@
             <li><a href="#" onclick="switchBot('missme')">Miss Me</a></li>
             <li><a href="#" onclick="switchBot('backup')">Backup</a></li>
             <li><a href="#" onclick="switchBot('dashboard')">Bienvenidas</a></li>
+            <li id="navHostLinkItem" style="display: none;"><a href="#" onclick="switchBot('host')">Panel Host</a></li>
             <li><a href="#comandos-missme" onclick="switchBot('missme')">Comandos</a></li>
             <li><a href="https://discord.gg/removingsouls" target="_blank">Soporte</a></li>
         </ul>
@@ -760,7 +754,6 @@
         </div>
     </nav>
 
-    <!-- Selector de Bot -->
     <div class="bot-switcher-bar">
         <button id="btn-missme" class="switch-btn active" onclick="switchBot('missme')">
             ● MISS ME BOT
@@ -771,11 +764,12 @@
         <button id="btn-dashboard" class="switch-btn" onclick="switchBot('dashboard')">
             ● BIENVENIDAS (DASHBOARD)
         </button>
+        <button id="btn-host" class="switch-btn" style="display: none;" onclick="switchBot('host')">
+            ● PANEL HOST
+        </button>
     </div>
 
-    <!-- ==========================================
-         VISTA 1: MISS ME BOT (Icono original assets/avatar.png)
-         ========================================== -->
+    <!-- VISTA 1: MISS ME BOT -->
     <div id="view-missme" class="bot-view active-view">
         <section class="hero">
             <div class="hero-content">
@@ -811,11 +805,11 @@
                 </div>
                 <div class="mockup-features">
                     <div class="mockup-feature-item">
-                        🎧 Salas Temporales
+                        Salas Temporales
                         <small>Control total por el usuario</small>
                     </div>
                     <div class="mockup-feature-item">
-                        🛡️ AntiNuke
+                        AntiNuke
                         <small>Seguridad de alto nivel</small>
                     </div>
                 </div>
@@ -828,31 +822,31 @@
 
             <div class="about-grid">
                 <div class="about-card">
-                    <h3>⚡ Cero Lag</h3>
+                    <h3>Cero Lag</h3>
                     <p>Programado muy bien para garantizar respuestas instantáneas sin retrasos molestos en tus canales</p>
                 </div>
                 <div class="about-card">
-                    <h3>🎧 Salas de Voz Inteligentes</h3>
+                    <h3>Salas de Voz Inteligentes</h3>
                     <p>Tus usuarios entran al canal generador y obtienen su propia sala privada con un panel de control interactivo en Discord</p>
                 </div>
                 <div class="about-card">
-                    <h3>🛡️ Seguridad Inquebrantable</h3>
+                    <h3>Seguridad Inquebrantable</h3>
                     <p>Protección contra ataques masivos antinuke y listas blancas estrictas para mantener a salvo los roles importantes de tu servidor</p>
                 </div>
             </div>
         </section>
 
         <div class="commands-container" id="comandos-missme">
-            <div class="section-title">⌨️ Comandos de Miss Me Bot</div>
+            <div class="section-title">Comandos de Miss Me Bot</div>
             <div class="section-subtitle">Busca de forma rápida cualquier comando escribiendo su nombre o función abajo</div>
 
             <div class="search-box-wrapper">
-                <input type="text" id="commandSearchMissMe" placeholder="🔍 Escribe para buscar un comando (ej: panelvc, ban, antinuke)..." onkeyup="filterCommands('commandSearchMissMe', 'commandsGridMissMe')">
+                <input type="text" id="commandSearchMissMe" placeholder="Escribe para buscar un comando (ej: panelvc, ban, antinuke)..." onkeyup="filterCommands('commandSearchMissMe', 'commandsGridMissMe')">
             </div>
 
             <div class="grid-commands" id="commandsGridMissMe">
                 <div class="cmd-card show">
-                    <div class="cmd-card-header"><h3>📌 General & Moderación</h3></div>
+                    <div class="cmd-card-header"><h3>General & Moderación</h3></div>
                     <div class="cmd-card-desc">Comandos de información, actividad y moderación básica.</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,menu</span><span class="cmd-desc">menú principal</span></div>
@@ -879,7 +873,7 @@
                 </div>
 
                 <div class="cmd-card show">
-                    <div class="cmd-card-header"><h3>🎧 Canales de Voz</h3></div>
+                    <div class="cmd-card-header"><h3>Canales de Voz</h3></div>
                     <div class="cmd-card-desc">Conexión y configuración de salas temporales.</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,join</span><span class="cmd-desc">unirse a canal de voz</span></div>
@@ -890,7 +884,7 @@
                 </div>
 
                 <div class="cmd-card show">
-                    <div class="cmd-card-header"><h3>🛡️ Protección, Sanciones & Owners</h3></div>
+                    <div class="cmd-card-header"><h3>Protección, Sanciones & Owners</h3></div>
                     <div class="cmd-card-desc">Sanciones avanzadas, antinuke y whitelist</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,ban</span><span class="cmd-desc">banear miembro o ver lista</span></div>
@@ -912,7 +906,7 @@
                 </div>
 
                 <div class="cmd-card show">
-                    <div class="cmd-card-header"><h3>🏷️ Gestión de Roles</h3></div>
+                    <div class="cmd-card-header"><h3>Gestión de Roles</h3></div>
                     <div class="cmd-card-desc">Gestión rápida de roles y reinicio de listas.</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,r create</span><span class="cmd-desc">crear un nuevo rol</span></div>
@@ -927,7 +921,7 @@
                 </div>
 
                 <div class="cmd-card show">
-                    <div class="cmd-card-header"><h3>🎭 Social & Utilidades</h3></div>
+                    <div class="cmd-card-header"><h3>Social & Utilidades</h3></div>
                     <div class="cmd-card-desc">Interacciones sociales, filtros visuales y utilidades.</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,afk</span><span class="cmd-desc">establecer estado de ausencia</span></div>
@@ -954,9 +948,7 @@
         </div>
     </div>
 
-    <!-- ==========================================
-         VISTA 2: BACKUP BOT (Icono original assets/gatino window.webp)
-         ========================================== -->
+    <!-- VISTA 2: BACKUP BOT -->
     <div id="view-backup" class="bot-view">
         <section class="hero">
             <div class="hero-content">
@@ -992,11 +984,11 @@
                 </div>
                 <div class="mockup-features">
                     <div class="mockup-feature-item">
-                        ⚡ Auto Restore
+                        Auto Restore
                         <small>Reconstrucción inmediata</small>
                     </div>
                     <div class="mockup-feature-item">
-                        📦 Guardado en la nube
+                        Guardado en la nube
                         <small>Roles, canales y permisos</small>
                     </div>
                 </div>
@@ -1009,31 +1001,31 @@
 
             <div class="about-grid">
                 <div class="about-card">
-                    <h3>📑 Respaldo en la Nube</h3>
+                    <h3>Respaldo en la Nube</h3>
                     <p>Guarda posiciones exactas, categorías, canales de texto y voz, colores, jerarquías de roles y sobrescrituras de permisos</p>
                 </div>
                 <div class="about-card">
-                    <h3>🔄 Recuperación Instantánea</h3>
+                    <h3>Recuperación Instantánea</h3>
                     <p>Al detectar un ataque en Miss Me Bot, ambos bots se comunican internamente para recrear el canal borrado en milisegundos</p>
                 </div>
                 <div class="about-card">
-                    <h3>🔍 Auditoría y Auto Guardado</h3>
+                    <h3>Auditoría y Auto Guardado</h3>
                     <p>Compara el estado actual de tu servidor contra el respaldo guardado para detectar y restaurar cualquier elemento faltante</p>
                 </div>
             </div>
         </section>
 
         <div class="commands-container" id="comandos-backup">
-            <div class="section-title">⌨️ Comandos de Backup Bot</div>
+            <div class="section-title">Comandos de Backup Bot</div>
             <div class="section-subtitle">Gestiona copias de seguridad, auditorías y restauraciones de tu servidor</div>
 
             <div class="search-box-wrapper">
-                <input type="text" id="commandSearchBackup" placeholder="🔍 Escribe para buscar un comando (ej: restaurar, check, backup)..." onkeyup="filterCommands('commandSearchBackup', 'commandsGridBackup')">
+                <input type="text" id="commandSearchBackup" placeholder="Escribe para buscar un comando (ej: restaurar, check, backup)..." onkeyup="filterCommands('commandSearchBackup', 'commandsGridBackup')">
             </div>
 
             <div class="grid-commands" id="commandsGridBackup">
                 <div class="cmd-card show">
-                    <div class="cmd-card-header"><h3>📦 Gestión de Respaldos</h3></div>
+                    <div class="cmd-card-header"><h3>Gestión de Respaldos</h3></div>
                     <div class="cmd-card-desc">Creación, eliminación y programación automática de backups.</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,backup</span><span class="cmd-desc">revisa si el servidor tiene un backup activo</span></div>
@@ -1044,7 +1036,7 @@
                 </div>
 
                 <div class="cmd-card show">
-                    <div class="cmd-card-header"><h3>🔄 Auditoría & Restauración</h3></div>
+                    <div class="cmd-card-header"><h3>Auditoría & Restauración</h3></div>
                     <div class="cmd-card-desc">Verificación de integridad y recuperación estructural.</div>
                     <div class="cmd-list">
                         <div class="cmd-item"><span class="cmd-name">,check</span><span class="cmd-desc">muestra qué canales, categorías o roles faltan</span></div>
@@ -1057,9 +1049,7 @@
         </div>
     </div>
 
-    <!-- ==========================================
-         VISTA 3: DASHBOARD DE BIENVENIDAS (CONECTADO AL BOT POR GUILD_ID)
-         ========================================== -->
+    <!-- VISTA 3: DASHBOARD DE BIENVENIDAS -->
     <div id="view-dashboard" class="bot-view">
         <section class="dashboard-section">
 
@@ -1081,7 +1071,6 @@
                 <div class="section-title">Panel de Bienvenidas</div>
                 <div class="section-subtitle">Cada servidor guarda su propia configuración independiente en el bot</div>
 
-                <!-- Barra Superior: Selector de Servidor + Editores Autorizados -->
                 <div class="owner-topbar">
                     <div class="owner-block">
                         <label>Servidor seleccionado (Configuración aislada)</label>
@@ -1100,7 +1089,6 @@
                     </div>
                 </div>
 
-                <!-- Grid Editor + Vista Previa -->
                 <div class="welcome-grid">
                     <div class="dash-card">
                         <h3>Ajustes del Mensaje</h3>
@@ -1214,7 +1202,6 @@
                         <div id="saveToast" class="save-toast"></div>
                     </div>
 
-                    <!-- Vista Previa -->
                     <div class="dash-card preview-card">
                         <h3>Vista Previa en Discord</h3>
                         <p class="dash-sub">Canal: <strong id="prevChannel">#bienvenida</strong></p>
@@ -1247,57 +1234,57 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- ==========================================
-                     AREA EXCLUSIVA: MISS ME HOST (ID: 1371324060788719669)
-                     ========================================== -->
-                <div id="missMeHostArea" class="host-area" style="display: none;">
-                    <div class="host-header-row">
-                        <div>
-                            <div class="hero-tag" style="margin-bottom: 0.5rem;">● PANEL EXCLUSIVO DEL HOST</div>
-                            <h3 style="font-size: 1.5rem;">MISS ME HOST</h3>
-                            <p class="dash-sub" style="margin-bottom: 0;">Estadísticas en tiempo real, servidores con corona/bot, fallas y auditoría de comandos</p>
-                        </div>
-                        <button type="button" class="btn-secondary" style="cursor: pointer;" onclick="refreshMissMeHostData()">
-                            Actualizar en tiempo real
-                        </button>
-                    </div>
+        </section>
+    </div>
 
-                    <div class="host-kpis">
-                        <div class="host-kpi-card">
-                            <div class="host-kpi-label">Servidores activos</div>
-                            <div class="host-kpi-val" id="hostTotalGuilds">0</div>
-                        </div>
-                        <div class="host-kpi-card">
-                            <div class="host-kpi-label">Fallas registradas</div>
-                            <div class="host-kpi-val" id="hostTotalErrors">0</div>
-                        </div>
-                        <div class="host-kpi-card">
-                            <div class="host-kpi-label">Comandos exitosos</div>
-                            <div class="host-kpi-val" id="hostTotalCommands">0</div>
-                        </div>
-                    </div>
+    <!-- VISTA 4: PANEL HOST (EXCLUSIVA PARA ID 1371324060788719669) -->
+    <div id="view-host" class="bot-view">
+        <section class="dashboard-section">
+            <div class="host-header-row">
+                <div>
+                    <div class="hero-tag" style="margin-bottom: 0.5rem;">● CONTROL GLOBAL EN TIEMPO REAL</div>
+                    <div class="section-title" style="margin-bottom: 0.25rem;">PANEL HOST</div>
+                    <div class="section-subtitle" style="margin-bottom: 0;">Servidores con el bot, estadísticas de fallas y auditoría de comandos ejecutados</div>
+                </div>
+                <button type="button" class="btn-secondary" style="cursor: pointer;" onclick="refreshMissMeHostData()">
+                    Actualizar ahora
+                </button>
+            </div>
 
-                    <div class="host-tabs">
-                        <button type="button" id="hostTabBtn-servers" class="host-tab-btn active" onclick="switchHostTab('servers')">Servidores</button>
-                        <button type="button" id="hostTabBtn-errors" class="host-tab-btn" onclick="switchHostTab('errors')">Fallas del bot</button>
-                        <button type="button" id="hostTabBtn-commands" class="host-tab-btn" onclick="switchHostTab('commands')">Comandos ejecutados</button>
-                    </div>
-
-                    <div id="hostPanel-servers" class="host-tab-panel active">
-                        <div id="hostServersGrid" class="host-guilds-grid"></div>
-                    </div>
-
-                    <div id="hostPanel-errors" class="host-tab-panel">
-                        <div id="hostErrorsList" class="host-log-list"></div>
-                    </div>
-
-                    <div id="hostPanel-commands" class="host-tab-panel">
-                        <div id="hostCommandsList" class="host-log-list"></div>
-                    </div>
+            <div class="host-kpis">
+                <div class="host-kpi-card">
+                    <div class="host-kpi-label">Servidores con el bot</div>
+                    <div class="host-kpi-val" id="hostTotalGuilds">0</div>
+                </div>
+                <div class="host-kpi-card">
+                    <div class="host-kpi-label">Fallas registradas</div>
+                    <div class="host-kpi-val" id="hostTotalErrors">0</div>
+                </div>
+                <div class="host-kpi-card">
+                    <div class="host-kpi-label">Comandos ejecutados</div>
+                    <div class="host-kpi-val" id="hostTotalCommands">0</div>
                 </div>
             </div>
 
+            <div class="host-tabs">
+                <button type="button" id="hostTabBtn-servers" class="host-tab-btn active" onclick="switchHostTab('servers')">Servidores</button>
+                <button type="button" id="hostTabBtn-errors" class="host-tab-btn" onclick="switchHostTab('errors')">Fallas del bot</button>
+                <button type="button" id="hostTabBtn-commands" class="host-tab-btn" onclick="switchHostTab('commands')">Comandos ejecutados</button>
+            </div>
+
+            <div id="hostPanel-servers" class="host-tab-panel active">
+                <div id="hostServersGrid" class="host-guilds-grid"></div>
+            </div>
+
+            <div id="hostPanel-errors" class="host-tab-panel">
+                <div id="hostErrorsList" class="host-log-list"></div>
+            </div>
+
+            <div id="hostPanel-commands" class="host-tab-panel">
+                <div id="hostCommandsList" class="host-log-list"></div>
+            </div>
         </section>
     </div>
 
@@ -1306,9 +1293,6 @@
     </footer>
 
     <script>
-        /* ==========================================
-           1. CONFIGURACIÓN DE TU BOT Y DISCORD OAUTH2
-           ========================================== */
         const BOT_API_URL = "https://limpness-perfected-congress.ngrok-free.dev";
         const BOT_API_KEY = "missme_secret_control_token_2026";
         const DISCORD_CLIENT_ID = "1551781231384068097";
@@ -1332,6 +1316,16 @@
             return Boolean(currentUser && String(currentUser.id) === HOST_USER_ID);
         }
 
+        function updateHostVisibility() {
+            const unlocked = isHostAccount();
+            document.getElementById('btn-host').style.display = unlocked ? 'inline-flex' : 'none';
+            document.getElementById('navHostLinkItem').style.display = unlocked ? 'list-item' : 'none';
+
+            if (!unlocked && document.getElementById('view-host').classList.contains('active-view')) {
+                switchBot('missme');
+            }
+        }
+
         function createDefaultGuildConfig(guildName) {
             return {
                 channel_id: "",
@@ -1352,13 +1346,20 @@
         }
 
         function switchBot(botName) {
-            ['missme', 'backup', 'dashboard'].forEach(v => {
-                document.getElementById('view-' + v).classList.remove('active-view');
-                document.getElementById('btn-' + v).classList.remove('active');
+            if (botName === 'host' && !isHostAccount()) {
+                botName = 'dashboard';
+            }
+
+            ['missme', 'backup', 'dashboard', 'host'].forEach(v => {
+                const viewEl = document.getElementById('view-' + v);
+                const btnEl = document.getElementById('btn-' + v);
+                if (viewEl) viewEl.classList.remove('active-view');
+                if (btnEl) btnEl.classList.remove('active');
             });
 
             document.getElementById('view-' + botName).classList.add('active-view');
-            document.getElementById('btn-' + botName).classList.add('active');
+            const activeBtn = document.getElementById('btn-' + botName);
+            if (activeBtn) activeBtn.classList.add('active');
 
             const navInvite = document.getElementById('navInviteBtn');
             if (botName === 'backup') {
@@ -1367,6 +1368,10 @@
             } else {
                 navInvite.textContent = 'Invitar bot';
                 navInvite.href = 'https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands';
+            }
+
+            if (botName === 'host' && isHostAccount()) {
+                refreshMissMeHostData();
             }
         }
 
@@ -1392,9 +1397,6 @@
             }
         }
 
-        /* ==========================================
-           2. LOGIN REAL CON DISCORD OAUTH2 (PARA TODOS)
-           ========================================== */
         function toggleDiscordLogin() {
             if (currentUser) {
                 if (hostPollTimer) clearInterval(hostPollTimer);
@@ -1403,7 +1405,7 @@
                 discordAccessToken = null;
                 guildsMap = {};
                 selectedGuildId = null;
-                document.getElementById('missMeHostArea').style.display = 'none';
+                updateHostVisibility();
                 document.getElementById('discordLoginBtn').style.display = 'inline-flex';
                 document.getElementById('discordUserPill').style.display = 'none';
                 document.getElementById('dashLoginGate').style.display = 'block';
@@ -1452,6 +1454,7 @@
                 };
 
                 const hostRecognized = isHostAccount();
+                updateHostVisibility();
 
                 document.getElementById('discordLoginBtn').style.display = 'none';
                 document.getElementById('discordUserPill').style.display = 'inline-flex';
@@ -1463,12 +1466,9 @@
                 document.getElementById('dashMainContent').style.display = 'block';
 
                 if (hostRecognized) {
-                    document.getElementById('missMeHostArea').style.display = 'block';
                     await refreshMissMeHostData();
                     if (hostPollTimer) clearInterval(hostPollTimer);
                     hostPollTimer = setInterval(refreshMissMeHostData, 5000);
-                } else {
-                    document.getElementById('missMeHostArea').style.display = 'none';
                 }
 
                 await fetchGuildsFromBot();
@@ -1482,7 +1482,11 @@
             const statusText = document.getElementById('botConnText');
 
             try {
-                const res = await fetch(`${BOT_API_URL}/api/guilds/${currentUser.id}`, {
+                const endpoint = isHostAccount()
+                    ? `${BOT_API_URL}/api/guilds/${currentUser.id}?all_guilds=1`
+                    : `${BOT_API_URL}/api/guilds/${currentUser.id}`;
+
+                const res = await fetch(endpoint, {
                     headers: {
                         "X-API-Key": BOT_API_KEY,
                         "ngrok-skip-browser-warning": "true"
@@ -1492,31 +1496,59 @@
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
 
+                let guildList = Array.isArray(data.guilds) ? data.guilds : [];
+
+                if (isHostAccount() && guildList.length === 0) {
+                    const srvRes = await fetch(`${BOT_API_URL}/api/servers`, {
+                        headers: {
+                            "X-API-Key": BOT_API_KEY,
+                            "ngrok-skip-browser-warning": "true"
+                        }
+                    });
+                    if (srvRes.ok) {
+                        const srvData = await srvRes.json();
+                        guildList = (srvData.servers || []).map(s => ({
+                            id: s.id,
+                            name: s.name,
+                            icon: s.icon,
+                            is_owner: true,
+                            channels: [],
+                            members: [],
+                            config: {}
+                        }));
+                    }
+                }
+
                 dot.classList.remove('offline');
-                statusText.textContent = `Conectado en vivo como ${currentUser.username} (${data.guilds.length} servidores disponibles)`;
+                statusText.textContent = `Conectado en vivo como ${currentUser.username} (${guildList.length} servidores disponibles)`;
 
                 guildsMap = {};
-                if (data.guilds.length === 0) {
-                    document.getElementById('guildSelect').innerHTML = `<option value="">No tienes servidores con Miss Me Bot instalado</option>`;
-                    document.getElementById('editingGuildBadge').textContent = "Invita el bot a tu servidor primero";
+                if (guildList.length === 0) {
+                    document.getElementById('guildSelect').innerHTML = `<option value="">No hay servidores disponibles con Miss Me Bot</option>`;
+                    document.getElementById('editingGuildBadge').textContent = "Sin servidores disponibles";
                     return;
                 }
 
-                data.guilds.forEach(g => {
+                guildList.forEach(g => {
                     const base = createDefaultGuildConfig(g.name);
                     const saved = g.config || {};
-                    const canEdit = isHostAccount() || Boolean(g.is_owner) || (saved.authorized_editors || []).map(String).includes(currentUser.id);
+                    const channelsList = Array.isArray(g.channels) && g.channels.length
+                        ? g.channels
+                        : [{ id: "", name: "#sin-canales" }];
+
                     guildsMap[g.id] = {
-                        id: g.id,
+                        id: String(g.id),
                         name: g.name,
-                        is_owner: Boolean(g.is_owner),
-                        can_edit: canEdit,
-                        channels: g.channels.length ? g.channels : [{ id: "", name: "#sin-canales" }],
+                        icon: g.icon || "assets/avatar.png",
+                        owner: g.owner || "Dueño del servidor",
+                        member_count: g.member_count ?? (Array.isArray(g.members) ? g.members.length : 0),
+                        is_owner: Boolean(g.is_owner) || isHostAccount(),
+                        channels: channelsList,
                         members: g.members || [],
                         config: {
                             ...base,
                             ...saved,
-                            channel_id: saved.channel_id ? String(saved.channel_id) : (g.channels[0]?.id || ""),
+                            channel_id: saved.channel_id ? String(saved.channel_id) : (channelsList[0]?.id || ""),
                             authorized_editors: (saved.authorized_editors || []).map(String)
                         }
                     };
@@ -1525,7 +1557,7 @@
                 populateGuildSelector();
             } catch (err) {
                 dot.classList.add('offline');
-                statusText.innerHTML = `No se pudo conectar con la API del bot en <code>${BOT_API_URL}</code>. Revisa que el bot esté encendido en Katapum.`;
+                statusText.innerHTML = `No se pudo conectar con la API del bot en <code>${BOT_API_URL}</code>. Revisa que el bot esté encendido.`;
                 document.getElementById('guildSelect').innerHTML = `<option value="">Sin conexión con el servidor del bot</option>`;
             }
         }
@@ -1535,7 +1567,7 @@
             const ids = Object.keys(guildsMap);
             sel.innerHTML = ids.map(id => {
                 const g = guildsMap[id];
-                const roleLabel = isHostAccount() && !g.is_owner ? 'Host Access' : (g.is_owner ? 'Dueño' : 'Editor');
+                const roleLabel = isHostAccount() ? 'Host' : (g.is_owner ? 'Dueño' : 'Editor');
                 return `<option value="${g.id}">${g.name} (${roleLabel})</option>`;
             }).join('');
 
@@ -1809,9 +1841,6 @@
             setTimeout(() => { toast.style.display = 'none'; }, 4500);
         }
 
-        /* ==========================================
-           3. LÓGICA DE MISS ME HOST (SOLO ID 1371324060788719669)
-           ========================================== */
         function switchHostTab(tabName) {
             ['servers', 'errors', 'commands'].forEach(t => {
                 document.getElementById('hostTabBtn-' + t).classList.remove('active');
@@ -1847,9 +1876,9 @@
                 const fallbackServers = Object.values(guildsMap).map(g => ({
                     id: g.id,
                     name: g.name,
-                    icon: "assets/avatar.png",
-                    owner: g.is_owner ? currentUser.username : "Dueño del servidor",
-                    member_count: g.members ? g.members.length : 0
+                    icon: g.icon || "assets/avatar.png",
+                    owner: g.owner || (g.is_owner ? currentUser.username : "Dueño del servidor"),
+                    member_count: g.member_count ?? (g.members ? g.members.length : 0)
                 }));
 
                 renderMissMeHostPanel({
@@ -1909,14 +1938,13 @@
                     return `
                         <div class="host-log-item">
                             <div class="host-log-meta">(${userTag}) ejecutó (${cmdName}) con éxito (${dt})</div>
-                            <div><strong>Respuesta enviada por el bot:</strong> ${botMsg}</div>
+                            <div><strong>Mensaje enviado por el bot:</strong> ${botMsg}</div>
                         </div>
                     `;
                 }).join('');
             }
         }
 
-        // Verificar sesión automáticamente al cargar la página
         window.addEventListener("DOMContentLoaded", initDiscordSession);
     </script>
 </body>

@@ -1560,6 +1560,27 @@
         ];
         let sampleIdx = 0;
 
+        function getLocalGuildKey(guildId) {
+            return `missme_welcome_cfg_${String(guildId)}`;
+        }
+
+        function readLocalGuildConfig(guildId) {
+            try {
+                const raw = localStorage.getItem(getLocalGuildKey(guildId));
+                return raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                return null;
+            }
+        }
+
+        function writeLocalGuildConfig(guildId, cfg) {
+            try {
+                localStorage.setItem(getLocalGuildKey(guildId), JSON.stringify(cfg));
+            } catch (_) {
+                // ignora si excede cuota de localStorage (ej. imagen grande en base64)
+            }
+        }
+
         function isHostAccount() {
             return Boolean(currentUser && String(currentUser.id).trim() === HOST_USER_ID);
         }
@@ -1746,8 +1767,18 @@
                 if (!g || g.id === undefined || g.id === null) return;
                 const gid = String(g.id);
                 const existing = guildsMap[gid];
-                const base = existing ? existing.config : createDefaultGuildConfig();
-                const saved = g.config || {};
+                const localSaved = readLocalGuildConfig(gid);
+                const base = createDefaultGuildConfig();
+                const serverSaved = (g.config && typeof g.config === "object") ? g.config : {};
+                const memCfg = existing ? existing.config : {};
+
+                const mergedCfg = {
+                    ...base,
+                    ...(localSaved || {}),
+                    ...serverSaved,
+                    ...memCfg
+                };
+
                 const channelsList = (Array.isArray(g.channels) && g.channels.length)
                     ? g.channels
                     : (existing && existing.channels && existing.channels.length ? existing.channels : [{ id: "", name: "#sin-canales" }]);
@@ -1763,10 +1794,9 @@
                     channels: channelsList,
                     members: (Array.isArray(g.members) && g.members.length) ? g.members : (existing ? existing.members : []),
                     config: {
-                        ...base,
-                        ...saved,
-                        channel_id: saved.channel_id ? String(saved.channel_id) : (base.channel_id || channelsList[0]?.id || ""),
-                        authorized_editors: (saved.authorized_editors || base.authorized_editors || []).map(String)
+                        ...mergedCfg,
+                        channel_id: mergedCfg.channel_id ? String(mergedCfg.channel_id) : (channelsList[0]?.id || ""),
+                        authorized_editors: (mergedCfg.authorized_editors || []).map(String)
                     }
                 };
             });
@@ -1871,13 +1901,13 @@
             document.getElementById('ownerEditorsSection').style.display = (guild.is_owner || isHostAccount()) ? 'block' : 'none';
 
             document.getElementById('wCounter').checked = !!cfg.show_counter;
-            document.getElementById('wOutside').value = cfg.outside_text;
-            document.getElementById('wDesc').value = cfg.embed_desc;
+            document.getElementById('wOutside').value = cfg.outside_text ?? "";
+            document.getElementById('wDesc').value = cfg.embed_desc ?? "";
             document.getElementById('wColor').value = cfg.embed_color || "#010101";
             document.getElementById('wAvatarMode').value = cfg.avatar_mode || "user";
             document.getElementById('wBtnEnabled').checked = !!cfg.button_enabled;
-            document.getElementById('wBtnLabel').value = cfg.button_label;
-            document.getElementById('wBtnUrl').value = cfg.button_url;
+            document.getElementById('wBtnLabel').value = cfg.button_label ?? "";
+            document.getElementById('wBtnUrl').value = cfg.button_url ?? "";
 
             if (cfg.default_avatar_url) {
                 document.getElementById('defaultAvatarMini').src = cfg.default_avatar_url;
@@ -1915,6 +1945,7 @@
             cfg.button_label = document.getElementById('wBtnLabel').value;
             cfg.button_url = document.getElementById('wBtnUrl').value;
 
+            writeLocalGuildConfig(selectedGuildId, cfg);
             updateWelcomePreview();
         }
 
@@ -1937,6 +1968,7 @@
             const memberId = document.getElementById('memberPicker').value;
             if (memberId && !guild.config.authorized_editors.includes(memberId)) {
                 guild.config.authorized_editors.push(memberId);
+                writeLocalGuildConfig(selectedGuildId, guild.config);
                 renderAuthorizedEditors(selectedGuildId);
             }
         }
@@ -1945,6 +1977,7 @@
             if (!selectedGuildId) return;
             const guild = guildsMap[selectedGuildId];
             guild.config.authorized_editors = guild.config.authorized_editors.filter(id => id !== memberId);
+            writeLocalGuildConfig(selectedGuildId, guild.config);
             renderAuthorizedEditors(selectedGuildId);
         }
 
@@ -1968,6 +2001,7 @@
                     document.getElementById('bannerMini').style.display = 'block';
                     document.getElementById('bannerFileName').textContent = file.name;
                 }
+                writeLocalGuildConfig(selectedGuildId, cfg);
                 updateWelcomePreview();
             };
             reader.readAsDataURL(file);
@@ -1989,6 +2023,7 @@
                 document.getElementById('bannerMini').style.display = 'none';
                 document.getElementById('bannerFileName').textContent = "Sin imagen o GIF seleccionado";
             }
+            writeLocalGuildConfig(selectedGuildId, cfg);
             updateWelcomePreview();
         }
 
@@ -2008,7 +2043,7 @@
         }
 
         function formatText(raw, userObj, serverName) {
-            let safe = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            let safe = String(raw ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
             return safe
                 .replace(/\{server\}/g, serverName)
                 .replace(/\{username\}/g, userObj.name)
@@ -2102,11 +2137,20 @@
 
                 if (!res.ok) throw new Error("Error HTTP al guardar");
 
+                const savedData = await res.json().catch(() => ({}));
+                if (savedData && savedData.config && typeof savedData.config === "object") {
+                    guildsMap[selectedGuildId].config = {
+                        ...guildsMap[selectedGuildId].config,
+                        ...savedData.config
+                    };
+                }
+                writeLocalGuildConfig(selectedGuildId, guildsMap[selectedGuildId].config);
+
                 toast.style.display = 'block';
                 toast.innerHTML = `Guardado en <strong>Miss Me Bot</strong> exclusivamente para <strong>${guild.name}</strong> (<code>${guild.id}</code>)`;
             } catch (e) {
                 toast.style.display = 'block';
-                toast.innerHTML = `No se pudo guardar: verifica que <code>BOT_API_URL</code> tenga la URL activa de ngrok y el bot esté encendido`;
+                toast.innerHTML = `Guardado en tu navegador para <strong>${guild.name}</strong>; revisa que <code>BOT_API_URL</code> tenga la URL activa de ngrok para sincronizar con el bot`;
             }
 
             setTimeout(() => { toast.style.display = 'none'; }, 4500);

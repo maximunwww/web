@@ -1,0 +1,2647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MISS ME & BACKUP BOT - El poder de la simplicidad en Discord</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .bot-switcher-bar {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 7.5rem auto -4rem auto;
+            padding: 0 8%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .switch-btn {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.65rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .switch-btn:hover {
+            border-color: var(--border-highlight);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .switch-btn.active {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+        }
+
+        .bot-view {
+            display: none;
+            animation: fadeInView 0.4s ease;
+        }
+
+        .bot-view.active-view {
+            display: block;
+        }
+
+        @keyframes fadeInView {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-discord-login {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.55rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-discord-login:hover {
+            border-color: var(--border-highlight);
+            background: var(--bg-card-hover);
+        }
+
+        .user-pill {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.35rem 0.9rem 0.35rem 0.45rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .user-pill:hover {
+            border-color: var(--border-highlight);
+        }
+
+        .user-pill img {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dashboard-section {
+            padding: 7rem 8% 5rem 8%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .login-gate-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 4rem 2rem;
+            text-align: center;
+            max-width: 560px;
+            margin: 2rem auto;
+        }
+
+        .login-gate-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .login-gate-card p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 0.98rem;
+        }
+
+        .bot-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .dot-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #2ecc71;
+        }
+
+        .dot-status.offline {
+            background: #e74c3c;
+        }
+
+        .owner-topbar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.4rem 1.8rem;
+            margin-bottom: 1.8rem;
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .owner-block label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+            font-weight: 700;
+        }
+
+        .editors-controls {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .editors-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .editor-tag {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .editor-tag.owner-badge {
+            border-color: var(--border-highlight);
+        }
+
+        .editor-tag button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            line-height: 1;
+        }
+
+        .editor-tag button:hover {
+            color: #ffffff;
+        }
+
+        .welcome-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .dash-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 2rem;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .dash-card:hover {
+            border-color: var(--border-highlight);
+            background: var(--bg-card-hover);
+        }
+
+        .dash-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .dash-sub {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.45rem;
+        }
+
+        .dash-input,
+        .dash-select,
+        .dash-textarea {
+            width: 100%;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.72rem 0.95rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.25s;
+        }
+
+        .dash-input:focus,
+        .dash-select:focus,
+        .dash-textarea:focus {
+            border-color: var(--border-highlight);
+        }
+
+        .dash-textarea {
+            min-height: 110px;
+            resize: vertical;
+            line-height: 1.45;
+        }
+
+        .vars-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+            align-items: center;
+        }
+
+        .vars-row span {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .var-btn {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-family: monospace;
+            font-size: 0.78rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .var-btn:hover {
+            border-color: var(--border-highlight);
+            color: var(--text-primary);
+        }
+
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .toggle-box {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.68rem 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88rem;
+            color: var(--text-primary);
+        }
+
+        .toggle-box input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #ffffff;
+            cursor: pointer;
+        }
+
+        .color-box {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.42rem 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-box input[type="color"] {
+            width: 30px;
+            height: 26px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .upload-zone {
+            background: var(--bg-main);
+            border: 1px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: border-color 0.25s;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--border-highlight);
+        }
+
+        .upload-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .upload-mini-thumb {
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .upload-text {
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .upload-btns {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .btn-mini {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 5px 10px;
+            border-radius: 7px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .btn-mini:hover {
+            border-color: var(--border-highlight);
+        }
+
+        .dash-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.9rem;
+            margin-top: 1.4rem;
+        }
+
+        .dash-actions button {
+            cursor: pointer;
+            border: none;
+            text-align: center;
+            font-size: 0.92rem;
+        }
+
+        .dash-actions .btn-secondary {
+            border: 1px solid var(--border-color);
+        }
+
+        .preview-card {
+            position: sticky;
+            top: 6.5rem;
+        }
+
+        .discord-box {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.3rem;
+        }
+
+        .dc-msg {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .dc-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .dc-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .dc-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .dc-botname {
+            color: #e74c3c;
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+
+        .dc-app-badge {
+            background: #5865F2;
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+
+        .dc-time {
+            color: var(--text-muted);
+            font-size: 0.74rem;
+        }
+
+        .dc-outside {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .dc-mention {
+            background: rgba(88, 101, 242, 0.28);
+            color: #c9cdfb;
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        .dc-embed {
+            background: #0b0b0d;
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            border-left: 4px solid #010101;
+            border-radius: 6px;
+            padding: 13px 15px;
+        }
+
+        .dc-embed-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .dc-embed-desc {
+            color: var(--text-secondary);
+            font-size: 0.86rem;
+            line-height: 1.45;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .dc-embed-desc strong {
+            color: var(--text-primary);
+        }
+
+        .dc-thumb {
+            width: 74px;
+            height: 74px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .dc-banner {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .dc-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 6px 13px;
+            border-radius: 6px;
+            margin-top: 8px;
+            text-decoration: none;
+        }
+
+        .save-toast {
+            margin-top: 1rem;
+            background: var(--bg-main);
+            border: 1px solid var(--border-highlight);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .host-shell {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 1.8rem;
+            align-items: start;
+        }
+
+        .host-sidebar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 1.4rem;
+            position: sticky;
+            top: 6.5rem;
+        }
+
+        .host-side-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 1.1rem;
+            margin-bottom: 1.1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .host-side-profile img {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+        }
+
+        .host-side-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            margin-bottom: 1.3rem;
+        }
+
+        .host-side-btn {
+            width: 100%;
+            text-align: left;
+            background: var(--bg-main);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.65rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.25s ease;
+        }
+
+        .host-side-btn:hover {
+            border-color: var(--border-highlight);
+            color: var(--text-primary);
+            transform: translateX(3px);
+        }
+
+        .host-side-btn.active {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+        }
+
+        .host-side-badge {
+            font-family: monospace;
+            font-size: 0.75rem;
+            padding: 2px 7px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+        }
+
+        .host-side-metrics {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.9rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .host-side-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .host-side-row strong {
+            color: var(--text-primary);
+            font-family: monospace;
+        }
+
+        .host-main {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .host-header-row {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 1.4rem 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .host-kpis {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .host-kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.2rem 1.3rem;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .host-kpi-card:hover {
+            border-color: var(--border-highlight);
+            background: var(--bg-card-hover);
+            transform: translateY(-3px);
+        }
+
+        .host-kpi-label {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            font-weight: 700;
+        }
+
+        .host-kpi-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: monospace;
+            margin-top: 0.35rem;
+            color: var(--text-primary);
+        }
+
+        .host-kpi-sub {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .host-charts-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .host-chart-box {
+            position: relative;
+            height: 230px;
+            width: 100%;
+        }
+
+        .host-tab-panel {
+            display: none;
+            animation: fadeInView 0.3s ease;
+        }
+
+        .host-tab-panel.active {
+            display: block;
+        }
+
+        .host-guilds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .host-guild-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.1rem;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .host-guild-card:hover {
+            border-color: var(--border-highlight);
+            background: var(--bg-card-hover);
+            transform: translateY(-3px);
+        }
+
+        .host-guild-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .host-guild-link {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.78rem;
+            font-family: monospace;
+            color: var(--text-primary);
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .host-guild-link-muted {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.76rem;
+            font-family: monospace;
+            color: var(--text-muted);
+        }
+
+        .host-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .host-console-box {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1rem;
+            font-family: monospace;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .host-log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .host-log-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.95rem 1.15rem;
+            font-size: 0.86rem;
+            line-height: 1.45;
+            transition: border-color 0.25s ease;
+        }
+
+        .host-log-item:hover {
+            border-color: var(--border-highlight);
+        }
+
+        .host-log-meta {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .privacy-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 8.5rem 8% 5rem 8%;
+        }
+
+        .privacy-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 2.5rem 2.8rem;
+        }
+
+        .privacy-main-title {
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.6rem;
+            font-style: normal;
+            transform: none;
+        }
+
+        .privacy-updated {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.98rem;
+            margin-bottom: 2rem;
+            font-style: normal;
+            transform: none;
+        }
+
+        .privacy-body {
+            display: inline-block;
+            width: 100%;
+            transform: skewX(-4deg);
+            transform-origin: left top;
+            color: var(--text-secondary);
+            font-size: 0.96rem;
+            line-height: 1.65;
+        }
+
+        .privacy-body h3 {
+            color: var(--text-primary);
+            font-size: 1.12rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .privacy-body p {
+            margin-bottom: 0.75rem;
+        }
+
+        .privacy-body ul {
+            margin: 0.4rem 0 0.9rem 1.3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .privacy-body strong {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 1050px) {
+            .host-shell {
+                grid-template-columns: 1fr;
+            }
+            .host-sidebar {
+                position: static;
+            }
+            .host-kpis {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .host-charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .bot-switcher-bar {
+                margin-top: 9.5rem;
+                margin-bottom: -5rem;
+            }
+            .owner-topbar,
+            .welcome-grid,
+            .row-2,
+            .dash-actions,
+            .host-kpis {
+                grid-template-columns: 1fr;
+            }
+            .preview-card {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">
+            <img src="assets/avatar.png" alt="Logo">
+            MISS ME SYSTEM
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" onclick="switchBot('missme')">Miss Me</a></li>
+            <li><a href="#" onclick="switchBot('backup')">Backup</a></li>
+            <li><a href="#" onclick="switchBot('dashboard')">Bienvenidas</a></li>
+            <li id="navHostLinkItem" style="display: none;"><a href="#" onclick="switchBot('host')">Panel Host</a></li>
+            <li><a href="#comandos-missme" onclick="switchBot('missme')">Comandos</a></li>
+            <li><a href="#" onclick="switchBot('privacy'); return false;">Política de Privacidad</a></li>
+            <li><a href="https://discord.gg/removingsouls" target="_blank">Soporte</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button id="discordLoginBtn" class="btn-discord-login" onclick="toggleDiscordLogin()">
+                Iniciar sesión con Discord
+            </button>
+            <div id="discordUserPill" class="user-pill" onclick="toggleDiscordLogin()" title="Clic para cerrar sesión">
+                <img id="loggedUserAvatar" src="assets/avatar.png" alt="Avatar">
+                <span id="loggedUserName">Usuario</span>
+            </div>
+            <a id="navInviteBtn" href="https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands" target="_blank" class="btn-invite-nav">Invitar bot</a>
+        </div>
+    </nav>
+
+    <div class="bot-switcher-bar">
+        <button id="btn-missme" class="switch-btn active" onclick="switchBot('missme')">
+            MISS ME BOT
+        </button>
+        <button id="btn-backup" class="switch-btn" onclick="switchBot('backup')">
+            BACKUP BOT
+        </button>
+        <button id="btn-dashboard" class="switch-btn" onclick="switchBot('dashboard')">
+            BIENVENIDAS (DASHBOARD)
+        </button>
+        <button id="btn-privacy" class="switch-btn" onclick="switchBot('privacy')">
+            POLÍTICA DE PRIVACIDAD
+        </button>
+        <button id="btn-host" class="switch-btn" style="display: none;" onclick="switchBot('host')">
+            PANEL HOST
+        </button>
+    </div>
+
+    <!-- VISTA 1: MISS ME BOT -->
+    <div id="view-missme" class="bot-view active-view">
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-tag">DISEÑADO PARA COMUNIDADES EXIGENTES</div>
+                <h1>Tu servidor. <span>Más limpio, seguro y potente</span></h1>
+                <p>Miss me bot un bot que lo puede todo</p>
+                <div class="hero-buttons">
+                    <a href="https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands" target="_blank" class="btn-primary">Añadir a Discord</a>
+                    <a href="#comandos-missme" class="btn-secondary">Explorar comandos</a>
+                </div>
+                <div class="hero-prefix">
+                    Prefijo por defecto: <span>,</span>
+                </div>
+            </div>
+
+            <div class="hero-mockup">
+                <div class="mockup-header">
+                    <div class="mockup-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    missme / core-system
+                </div>
+                <div class="mockup-bot-info">
+                    <img src="assets/avatar.png" alt="Avatar Bot" class="mockup-bot-avatar">
+                    <div>
+                        <div class="mockup-bot-name">MISS ME BOT</div>
+                        <div class="mockup-bot-desc">Estética y rendimiento en armonía</div>
+                    </div>
+                </div>
+                <div class="mockup-command-box">
+                    <span>,menu</span>
+                    <span>ACTIVO</span>
+                </div>
+                <div class="mockup-features">
+                    <div class="mockup-feature-item">
+                        Salas Temporales
+                        <small>Control total por el usuario</small>
+                    </div>
+                    <div class="mockup-feature-item">
+                        AntiNuke
+                        <small>Seguridad de alto nivel</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section" id="about">
+            <div class="section-title">¿Por qué elegir Miss me bot?</div>
+            <div class="section-subtitle">Bot completo para garantizar la seguridad y divercion en tus servidores</div>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>Cero Lag</h3>
+                    <p>Programado muy bien para garantizar respuestas instantáneas sin retrasos molestos en tus canales</p>
+                </div>
+                <div class="about-card">
+                    <h3>Salas de Voz Inteligentes</h3>
+                    <p>Tus usuarios entran al canal generador y obtienen su propia sala privada con un panel de control interactivo en Discord</p>
+                </div>
+                <div class="about-card">
+                    <h3>Seguridad Inquebrantable</h3>
+                    <p>Protección contra ataques masivos antinuke y listas blancas estrictas para mantener a salvo los roles importantes de tu servidor</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="commands-container" id="comandos-missme">
+            <div class="section-title">Comandos de Miss Me Bot</div>
+            <div class="section-subtitle">Busca de forma rápida cualquier comando escribiendo su nombre o función abajo</div>
+
+            <div class="search-box-wrapper">
+                <input type="text" id="commandSearchMissMe" placeholder="Escribe para buscar un comando (ej: panelvc, ban, antinuke)..." onkeyup="filterCommands('commandSearchMissMe', 'commandsGridMissMe')">
+            </div>
+
+            <div class="grid-commands" id="commandsGridMissMe">
+                <div class="cmd-card show">
+                    <div class="cmd-card-header"><h3>General & Moderación</h3></div>
+                    <div class="cmd-card-desc">Comandos de información, actividad y moderación básica</div>
+                    <div class="cmd-list">
+                        <div class="cmd-item"><span class="cmd-name">,menu</span><span class="cmd-desc">menú principal</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,help</span><span class="cmd-desc">información y soporte</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,ping</span><span class="cmd-desc">latencia del bot</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,server</span><span class="cmd-desc">información detallada del servidor</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,userinfo</span><span class="cmd-desc">información básica de un usuario</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,vanity</span><span class="cmd-desc">mostrar invitación vanity del servidor</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,announce</span><span class="cmd-desc">enviar un anuncio en embed</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,statschannels</span><span class="cmd-desc">canales de estadísticas en vivo</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,roles</span><span class="cmd-desc">lista de roles paginada</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,autorole</span><span class="cmd-desc">configurar rol automático</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,bienvenida</span><span class="cmd-desc">configurar canal de bienvenida</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,boostchannel</span><span class="cmd-desc">configurar canal de avisos de boost</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,activos</span><span class="cmd-desc">miembros más activos</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,inactivos</span><span class="cmd-desc">miembros inactivos</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,avatars</span><span class="cmd-desc">historial de avatares en el bot</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,names</span><span class="cmd-desc">historial de nombres y apodos en el bot</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,clearnames</span><span class="cmd-desc">limpiar historial de nombres con el bot</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,clearavatars</span><span class="cmd-desc">limpiar historial de avatares con el bot</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,clear</span><span class="cmd-desc">purgar chat completo</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,kick</span><span class="cmd-desc">expulsar miembro</span></div>
+                    </div>
+                </div>
+
+                <div class="cmd-card show">
+                    <div class="cmd-card-header"><h3>Canales de Voz</h3></div>
+                    <div class="cmd-card-desc">Conexión y configuración de salas temporales</div>
+                    <div class="cmd-list">
+                        <div class="cmd-item"><span class="cmd-name">,join</span><span class="cmd-desc">unirse a canal de voz</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,leave</span><span class="cmd-desc">salir de canal de voz</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,panelvc</span><span class="cmd-desc">panel de vc's temporales</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,configuracionvc</span><span class="cmd-desc">configurar sistema de voz</span></div>
+                    </div>
+                </div>
+
+                <div class="cmd-card show">
+                    <div class="cmd-card-header"><h3>Protección, Sanciones & Owners</h3></div>
+                    <div class="cmd-card-desc">Sanciones avanzadas, antinuke y whitelist</div>
+                    <div class="cmd-list">
+                        <div class="cmd-item"><span class="cmd-name">,ban</span><span class="cmd-desc">banear miembro o ver lista</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,uba</span><span class="cmd-desc">desbaneo masivo</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,timeout</span><span class="cmd-desc">silenciar miembro</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,untimeout</span><span class="cmd-desc">quitar silencio a miembro</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,uta</span><span class="cmd-desc">quitar silencio a todos</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,lock</span><span class="cmd-desc">bloquear canal</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,unlock</span><span class="cmd-desc">desbloquear canal</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,safe</span><span class="cmd-desc">bloqueo estricto de canal</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,antinuke</span><span class="cmd-desc">gestión de lista antinuke</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,antibot</span><span class="cmd-desc">activar o desactivar antibots no autorizados</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,hb</span><span class="cmd-desc">aplicar hardban estricto</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,black</span><span class="cmd-desc">blacklist global de usuarios</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,an</span><span class="cmd-desc">gestión de whitelist canales/rolewl</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,an links</span><span class="cmd-desc">filtro de enlaces de otros servidores</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,rolewl</span><span class="cmd-desc">whitelist de roles protegidos</span></div>
+                    </div>
+                </div>
+
+                <div class="cmd-card show">
+                    <div class="cmd-card-header"><h3>Gestión de Roles</h3></div>
+                    <div class="cmd-card-desc">Gestión rápida de roles y reinicio de listas</div>
+                    <div class="cmd-list">
+                        <div class="cmd-item"><span class="cmd-name">,r create</span><span class="cmd-desc">crear un nuevo rol</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,r delete</span><span class="cmd-desc">eliminar un rol</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,r rename</span><span class="cmd-desc">renombrar un rol existente</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,r add</span><span class="cmd-desc">asignar rol a usuario</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,r remove</span><span class="cmd-desc">retirar rol a usuario</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,r antinuke</span><span class="cmd-desc">reiniciar lista antinuke del servidor</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,r owner</span><span class="cmd-desc">reiniciar lista de owners adicionales</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,r wl</span><span class="cmd-desc">reiniciar whitelists del servidor</span></div>
+                    </div>
+                </div>
+
+                <div class="cmd-card show">
+                    <div class="cmd-card-header"><h3>Social & Utilidades</h3></div>
+                    <div class="cmd-card-desc">Interacciones sociales, filtros visuales y utilidades</div>
+                    <div class="cmd-list">
+                        <div class="cmd-item"><span class="cmd-name">,afk</span><span class="cmd-desc">establecer estado de ausencia</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,steal</span><span class="cmd-desc">copiar emoji de otro servidor</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,marry</span><span class="cmd-desc">proponer matrimonio a un usuario</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,divorce</span><span class="cmd-desc">divorciarte de tu pareja actual</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,marriage</span><span class="cmd-desc">ver estado civil y pareja</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,ship</span><span class="cmd-desc">calculador de compatibilidad con un usuario</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,kill</span><span class="cmd-desc">eliminar a un usuario</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,hug</span><span class="cmd-desc">dar un abrazo a un usuario</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,slap</span><span class="cmd-desc">dar una bofetada interactiva</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,pat</span><span class="cmd-desc">dar una caricia a un usuario</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,kiss</span><span class="cmd-desc">dar un beso a un usuario</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,jail</span><span class="cmd-desc">aplicar filtro de rejas en imagenes</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,wasted</span><span class="cmd-desc">aplicar filtro wasted en imagenes</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,blur</span><span class="cmd-desc">aplicar desenfoque a imagenes</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,8ball</span><span class="cmd-desc">consultar a la bola 8 mágica</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,choose</span><span class="cmd-desc">elegir al azar entre varias opciones</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,reverse</span><span class="cmd-desc">invertir el orden de un texto</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,embed</span><span class="cmd-desc">enviar mensaje con el bot</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISTA 2: BACKUP BOT -->
+    <div id="view-backup" class="bot-view">
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-tag">BOT DE RESPALDO Y RECUPERACIÓN INSTANTÁNEA</div>
+                <h1>Backup Bot <span>Tu estructura a salvo las 24 horas</span></h1>
+                <p>Trabaja en sincronización directa con Miss Me Bot. Si alguien sin autorización elimina un canal, Backup Bot recibe la alerta interna y lo reconstruye al instante con todos sus permisos y categorías intactos</p>
+                <div class="hero-buttons">
+                    <a href="https://discord.com/api/oauth2/authorize?client_id=1558922334759288923&permissions=8&scope=bot" target="_blank" class="btn-primary">Añadir Backup Bot</a>
+                    <a href="#comandos-backup" class="btn-secondary">Ver comandos</a>
+                </div>
+                <div class="hero-prefix">
+                    Prefijo por defecto: <span>,</span> • Sincronización API: <span>ACTIVA</span>
+                </div>
+            </div>
+
+            <div class="hero-mockup">
+                <div class="mockup-header">
+                    <div class="mockup-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    backup / autorestore-engine
+                </div>
+                <div class="mockup-bot-info">
+                    <img src="assets/gatino window.webp" alt="Avatar Backup Bot" class="mockup-bot-avatar">
+                    <div>
+                        <div class="mockup-bot-name">BACKUP BOT</div>
+                        <div class="mockup-bot-desc">Copias de seguridad y restauración automática</div>
+                    </div>
+                </div>
+                <div class="mockup-command-box">
+                    <span>,menu</span>
+                    <span>SINCRONIZADO</span>
+                </div>
+                <div class="mockup-features">
+                    <div class="mockup-feature-item">
+                        Auto Restore
+                        <small>Reconstrucción inmediata</small>
+                    </div>
+                    <div class="mockup-feature-item">
+                        Guardado en la nube
+                        <small>Roles, canales y permisos</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section" id="about-backup">
+            <div class="section-title">¿Cómo trabaja junto a Miss Me Bot?</div>
+            <div class="section-subtitle">Doble capa de defensa diseñada para evitar pérdidas irreversibles en tu servidor</div>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>Respaldo en la Nube</h3>
+                    <p>Guarda posiciones exactas, categorías, canales de texto y voz, colores, jerarquías de roles y sobrescrituras de permisos</p>
+                </div>
+                <div class="about-card">
+                    <h3>Recuperación Instantánea</h3>
+                    <p>Al detectar un ataque en Miss Me Bot, ambos bots se comunican internamente para recrear el canal borrado en milisegundos</p>
+                </div>
+                <div class="about-card">
+                    <h3>Auditoría y Auto Guardado</h3>
+                    <p>Compara el estado actual de tu servidor contra el respaldo guardado para detectar y restaurar cualquier elemento faltante</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="commands-container" id="comandos-backup">
+            <div class="section-title">Comandos de Backup Bot</div>
+            <div class="section-subtitle">Gestiona copias de seguridad, auditorías y restauraciones de tu servidor</div>
+
+            <div class="search-box-wrapper">
+                <input type="text" id="commandSearchBackup" placeholder="Escribe para buscar un comando (ej: restaurar, check, backup)..." onkeyup="filterCommands('commandSearchBackup', 'commandsGridBackup')">
+            </div>
+
+            <div class="grid-commands" id="commandsGridBackup">
+                <div class="cmd-card show">
+                    <div class="cmd-card-header"><h3>Gestión de Respaldos</h3></div>
+                    <div class="cmd-card-desc">Creación, eliminación y programación automática de backups</div>
+                    <div class="cmd-list">
+                        <div class="cmd-item"><span class="cmd-name">,backup</span><span class="cmd-desc">revisa si el servidor tiene un backup activo</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,c backup</span><span class="cmd-desc">guarda canales, categorías, roles y permisos</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,d backup</span><span class="cmd-desc">elimina el backup guardado del servidor</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,backup set</span><span class="cmd-desc">auto guardado configurado cada numero de días</span></div>
+                    </div>
+                </div>
+
+                <div class="cmd-card show">
+                    <div class="cmd-card-header"><h3>Auditoría & Restauración</h3></div>
+                    <div class="cmd-card-desc">Verificación de integridad y recuperación estructural</div>
+                    <div class="cmd-list">
+                        <div class="cmd-item"><span class="cmd-name">,check</span><span class="cmd-desc">muestra qué canales, categorías o roles faltan</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,check server</span><span class="cmd-desc">muestra lista de lo guardado</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,restaurar</span><span class="cmd-desc">compara lo subido a la nube con lo que esta y restaura lo faltante</span></div>
+                        <div class="cmd-item"><span class="cmd-name">,menu</span><span class="cmd-desc">mostrar menú de comandos de backup</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISTA 3: DASHBOARD DE BIENVENIDAS -->
+    <div id="view-dashboard" class="bot-view">
+        <section class="dashboard-section">
+
+            <div id="dashLoginGate" class="login-gate-card">
+                <div class="hero-tag" style="margin-bottom: 1.2rem;">PANEL DE CONTROL DE SERVIDORES</div>
+                <h2>Conecta tu cuenta de Discord</h2>
+                <p>Inicia sesión con tu cuenta de Discord para cargar automáticamente los servidores disponibles y configurar las bienvenidas</p>
+                <button class="btn-primary" style="border: none; cursor: pointer;" onclick="toggleDiscordLogin()">
+                    Iniciar sesión con Discord
+                </button>
+            </div>
+
+            <div id="dashMainContent" style="display: none;">
+                <div class="bot-status-pill">
+                    <span id="botConnDot" class="dot-status offline"></span>
+                    <span id="botConnText">Conectando con Miss Me Bot API...</span>
+                </div>
+
+                <div class="section-title">Panel de Bienvenidas</div>
+                <div class="section-subtitle">Cada servidor guarda su propia configuración independiente en el bot</div>
+
+                <div class="owner-topbar">
+                    <div class="owner-block">
+                        <label>Servidor seleccionado (Configuración aislada)</label>
+                        <select id="guildSelect" class="dash-select" onchange="switchSelectedGuild()"></select>
+                    </div>
+
+                    <div class="owner-block" id="ownerEditorsSection">
+                        <label>Miembros que pueden editar este servidor</label>
+                        <div class="editors-controls">
+                            <select id="memberPicker" class="dash-select"></select>
+                            <button type="button" class="btn-primary" style="padding: 0.65rem 1.2rem; border: none; cursor: pointer; white-space: nowrap;" onclick="addAuthorizedEditor()">
+                                + Autorizar
+                            </button>
+                        </div>
+                        <div class="editors-tags" id="editorsList"></div>
+                    </div>
+                </div>
+
+                <div class="welcome-grid">
+                    <div class="dash-card">
+                        <h3>Ajustes del Mensaje</h3>
+                        <p class="dash-sub">Editando servidor: <strong id="editingGuildBadge">—</strong> • Canal configurado por comando en el servidor</p>
+
+                        <div class="form-group">
+                            <label>Contador de Miembros</label>
+                            <div class="toggle-box">
+                                <span>Mostrar + member #N</span>
+                                <input type="checkbox" id="wCounter" checked onchange="syncFormToCurrentGuild()">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mensaje exterior (fuera del embed)</label>
+                            <input type="text" id="wOutside" class="dash-input" oninput="syncFormToCurrentGuild()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Texto dentro del Embed</label>
+                            <textarea id="wDesc" class="dash-textarea" oninput="syncFormToCurrentGuild()"></textarea>
+                            <div class="vars-row">
+                                <span>Variables:</span>
+                                <button type="button" class="var-btn" onclick="insertWelcomeVar('{user}')">{user}</button>
+                                <button type="button" class="var-btn" onclick="insertWelcomeVar('{username}')">{username}</button>
+                                <button type="button" class="var-btn" onclick="insertWelcomeVar('{server}')">{server}</button>
+                                <button type="button" class="var-btn" onclick="insertWelcomeVar('{count}')">{count}</button>
+                            </div>
+                        </div>
+
+                        <div class="row-2">
+                            <div class="form-group">
+                                <label>Color del borde del Embed</label>
+                                <div class="color-box">
+                                    <input type="color" id="wColor" value="#383838" oninput="syncFormToCurrentGuild()">
+                                    <span id="wColorHex" style="font-family: monospace; font-size: 0.88rem;">#383838</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Avatar en el Embed</label>
+                                <select id="wAvatarMode" class="dash-select" onchange="syncFormToCurrentGuild()">
+                                    <option value="user">Avatar de cada miembro</option>
+                                    <option value="default">Avatar default para todos</option>
+                                    <option value="none">Sin avatar</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="defaultAvatarBox" style="display: none;">
+                            <label>Avatar Default (Seleccionar desde galería)</label>
+                            <div class="upload-zone">
+                                <div class="upload-info">
+                                    <img id="defaultAvatarMini" class="upload-mini-thumb" src="" alt="">
+                                    <span class="upload-text" id="defaultAvatarName">Ningún archivo seleccionado</span>
+                                </div>
+                                <div class="upload-btns">
+                                    <input type="file" id="defaultAvatarInput" accept="image/*" style="display: none;" onchange="handleGalleryUpload(event, 'default')">
+                                    <button type="button" class="btn-mini" onclick="document.getElementById('defaultAvatarInput').click()">Elegir foto / GIF</button>
+                                    <button type="button" class="btn-mini" onclick="clearGalleryUpload('default')">Quitar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Foto o GIF grande del Embed (Seleccionar desde galería)</label>
+                            <div class="upload-zone">
+                                <div class="upload-info">
+                                    <img id="bannerMini" class="upload-mini-thumb" src="" alt="">
+                                    <span class="upload-text" id="bannerFileName">Sin imagen o GIF seleccionado</span>
+                                </div>
+                                <div class="upload-btns">
+                                    <input type="file" id="bannerInput" accept="image/*" style="display: none;" onchange="handleGalleryUpload(event, 'banner')">
+                                    <button type="button" class="btn-mini" onclick="document.getElementById('bannerInput').click()">Elegir de galería</button>
+                                    <button type="button" class="btn-mini" onclick="clearGalleryUpload('banner')">Quitar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Botón inferior del mensaje</label>
+                            <div class="toggle-box">
+                                <span>Activar botón de enlace</span>
+                                <input type="checkbox" id="wBtnEnabled" checked onchange="syncFormToCurrentGuild()">
+                            </div>
+                        </div>
+
+                        <div class="row-2" id="btnFieldsRow">
+                            <div class="form-group">
+                                <label>Texto del botón</label>
+                                <input type="text" id="wBtnLabel" class="dash-input" oninput="syncFormToCurrentGuild()">
+                            </div>
+                            <div class="form-group">
+                                <label>Enlace del botón</label>
+                                <input type="url" id="wBtnUrl" class="dash-input" oninput="syncFormToCurrentGuild()">
+                            </div>
+                        </div>
+
+                        <div class="dash-actions">
+                            <button type="button" class="btn-secondary" onclick="nextSampleUser()">Simular otro miembro</button>
+                            <button type="button" class="btn-primary" onclick="saveWelcomeSettingsToBot()">Guardar en el Bot</button>
+                        </div>
+
+                        <div id="saveToast" class="save-toast"></div>
+                    </div>
+
+                    <div class="dash-card preview-card">
+                        <h3>Vista Previa en Discord</h3>
+                        <p class="dash-sub">Canal: <strong id="prevChannel">Configurar con comando en el servidor</strong></p>
+
+                        <div class="discord-box">
+                            <div class="dc-msg">
+                                <img class="dc-avatar" src="assets/avatar.png" alt="Miss me bot">
+                                <div class="dc-body">
+                                    <div class="dc-header">
+                                        <span class="dc-botname">Miss me bot</span>
+                                        <span class="dc-app-badge">APP</span>
+                                        <span class="dc-time">16:12</span>
+                                    </div>
+
+                                    <div class="dc-outside" id="prevOutside"></div>
+
+                                    <div class="dc-embed" id="prevEmbed">
+                                        <div class="dc-embed-top">
+                                            <div class="dc-embed-desc" id="prevDesc"></div>
+                                            <img class="dc-thumb" id="prevThumb" src="assets/avatar.png" alt="Avatar">
+                                        </div>
+                                        <img class="dc-banner" id="prevBanner" src="" alt="Banner">
+                                    </div>
+
+                                    <a href="#" class="dc-link-btn" id="prevBtn" onclick="return false;">
+                                        <span id="prevBtnText">own to vc</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- VISTA 4: PANEL HOST (EXCLUSIVA PARA ID 1371324060788719669) -->
+    <div id="view-host" class="bot-view">
+        <section class="dashboard-section">
+            <div class="host-shell">
+
+                <aside class="host-sidebar">
+                    <div class="host-side-profile">
+                        <img id="hostSideAvatar" src="assets/avatar.png" alt="Host">
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.95rem;">PANEL HOST</div>
+                            <div style="color: var(--text-muted); font-size: 0.78rem; font-family: monospace;">ID: 1371324060788719669</div>
+                        </div>
+                    </div>
+
+                    <div class="host-side-nav">
+                        <button type="button" id="hostTabBtn-resumen" class="host-side-btn active" onclick="switchHostTab('resumen')">
+                            <span>Resumen y Gráficos</span>
+                            <span class="host-side-badge">LIVE</span>
+                        </button>
+                        <button type="button" id="hostTabBtn-servers" class="host-side-btn" onclick="switchHostTab('servers')">
+                            <span>Servidores</span>
+                            <span id="hostBadgeServers" class="host-side-badge">0</span>
+                        </button>
+                        <button type="button" id="hostTabBtn-errors" class="host-side-btn" onclick="switchHostTab('errors')">
+                            <span>Fallas del bot</span>
+                            <span id="hostBadgeErrors" class="host-side-badge">0</span>
+                        </button>
+                        <button type="button" id="hostTabBtn-commands" class="host-side-btn" onclick="switchHostTab('commands')">
+                            <span>Comandos ejecutados</span>
+                            <span id="hostBadgeCommands" class="host-side-badge">0</span>
+                        </button>
+                        <button type="button" id="hostTabBtn-visits" class="host-side-btn" onclick="switchHostTab('visits')">
+                            <span>Visitas únicas</span>
+                            <span id="hostBadgeVisits" class="host-side-badge">0</span>
+                        </button>
+                    </div>
+
+                    <div class="host-side-metrics">
+                        <div class="host-side-row">
+                            <span>Estado API</span>
+                            <strong id="hostApiState">OFFLINE</strong>
+                        </div>
+                        <div class="host-side-row">
+                            <span>Latencia bot</span>
+                            <strong id="hostBotLatency">—</strong>
+                        </div>
+                        <div class="host-side-row">
+                            <span>Total miembros</span>
+                            <strong id="hostTotalMembers">0</strong>
+                        </div>
+                    </div>
+                </aside>
+
+                <div class="host-main">
+                    <div class="host-header-row">
+                        <div>
+                            <div class="hero-tag" style="margin-bottom: 0.45rem;">TELEMETRÍA EN TIEMPO REAL</div>
+                            <div class="section-title" style="margin-bottom: 0.2rem; font-size: 1.9rem;">PANEL HOST</div>
+                            <div class="section-subtitle" style="margin-bottom: 0; font-size: 0.95rem;">Todos los servidores donde está el bot, fallas, comandos y visitas únicas</div>
+                        </div>
+                        <button type="button" class="btn-secondary" style="cursor: pointer;" onclick="refreshMissMeHostData()">
+                            Actualizar ahora
+                        </button>
+                    </div>
+
+                    <div class="host-kpis">
+                        <div class="host-kpi-card">
+                            <div class="host-kpi-label">Servidores con el bot</div>
+                            <div class="host-kpi-val" id="hostTotalGuilds">0</div>
+                            <div class="host-kpi-sub">Con icono, dueño y miembros</div>
+                        </div>
+                        <div class="host-kpi-card">
+                            <div class="host-kpi-label">Fallas del bot</div>
+                            <div class="host-kpi-val" id="hostTotalErrors">0</div>
+                            <div class="host-kpi-sub">Errores capturados en vivo</div>
+                        </div>
+                        <div class="host-kpi-card">
+                            <div class="host-kpi-label">Comandos ejecutados</div>
+                            <div class="host-kpi-val" id="hostTotalCommands">0</div>
+                            <div class="host-kpi-sub">Ejecuciones con éxito</div>
+                        </div>
+                        <div class="host-kpi-card">
+                            <div class="host-kpi-label">Visitas únicas</div>
+                            <div class="host-kpi-val" id="hostTotalVisits">0</div>
+                            <div class="host-kpi-sub">Sin repetir personas</div>
+                        </div>
+                    </div>
+
+                    <div id="hostPanel-resumen" class="host-tab-panel active">
+                        <div class="host-charts-grid">
+                            <div class="dash-card">
+                                <h3>Actividad de Comandos y Fallas</h3>
+                                <p class="dash-sub">Comportamiento registrado en tiempo real</p>
+                                <div class="host-chart-box">
+                                    <canvas id="hostActivityChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="dash-card">
+                                <h3>Distribución de Miembros</h3>
+                                <p class="dash-sub">Miembros por servidor activo</p>
+                                <div class="host-chart-box">
+                                    <canvas id="hostMembersChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="hostPanel-servers" class="host-tab-panel">
+                        <div id="hostServersGrid" class="host-guilds-grid"></div>
+                    </div>
+
+                    <div id="hostPanel-errors" class="host-tab-panel">
+                        <div class="host-console-box">
+                            <div id="hostErrorsList" class="host-log-list"></div>
+                        </div>
+                    </div>
+
+                    <div id="hostPanel-commands" class="host-tab-panel">
+                        <div class="host-toolbar">
+                            <input type="text" id="hostCommandSearch" class="dash-input" style="max-width: 340px;" placeholder="Filtrar por usuario, comando o respuesta..." oninput="renderHostCommandsList()">
+                        </div>
+                        <div class="host-console-box">
+                            <div id="hostCommandsList" class="host-log-list"></div>
+                        </div>
+                    </div>
+
+                    <div id="hostPanel-visits" class="host-tab-panel">
+                        <div class="host-console-box">
+                            <div id="hostVisitsList" class="host-log-list"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- VISTA 5: POLÍTICA DE PRIVACIDAD -->
+    <div id="view-privacy" class="bot-view">
+        <section class="privacy-container">
+            <div class="privacy-card">
+                <h1 class="privacy-main-title">Política de Privacidad - Miss me</h1>
+                <p class="privacy-updated"><strong>Última actualización: Noviembre de 2026</strong></p>
+
+                <div class="privacy-body">
+                    <h3>1. Sobre Miss Me</h3>
+                    <p>Miss Me es un bot de Discord creado y administrado por <strong>Sánchez</strong>, diseñado para ayudar a gestionar, proteger y organizar servidores de Discord junto con su panel web.</p>
+
+                    <h3>2. ¿Qué información usamos?</h3>
+                    <p>Para que el bot y el panel funcionen bien en cada servidor, solo usamos lo necesario:</p>
+                    <ul>
+                        <li><strong>Identificadores básicos de Discord:</strong> números de identificación de servidores, canales, roles y usuarios para saber dónde enviar avisos, aplicar permisos, dar bienvenida o crear salas de voz.</li>
+                        <li><strong>Configuración de cada servidor:</strong> los ajustes que los administradores eligen para su servidor (como canales de registro, roles automáticos o reglas de protección).</li>
+                        <li><strong>Mensajes y estado en el servidor:</strong> se revisan al momento solo cuando usas un comando (como <code>,menu</code>), para moderar mensajes o mostrar información dentro del propio servidor. No guardamos tus conversaciones privadas ni vendemos lo que escribes.</li>
+                    </ul>
+
+                    <h3>3. ¿Para qué usamos esta información?</h3>
+                    <p>La usamos únicamente para:</p>
+                    <ul>
+                        <li>Hacer que los comandos, las funciones automáticas y el panel web funcionen correctamente.</li>
+                        <li>Mantener los servidores protegidos contra abusos o borrados accidentales y poder restaurar su configuración.</li>
+                        <li>Detectar fallos y mejorar la estabilidad del bot.</li>
+                    </ul>
+
+                    <h3>4. ¿Cómo cuidamos tus datos?</h3>
+                    <ul>
+                        <li>La información se guarda de forma segura y solo se conserva mientras el bot esté en el servidor o sea necesaria para mantener su configuración.</li>
+                        <li>Nunca vendemos, alquilamos ni compartimos tu información con empresas externas ni para anuncios.</li>
+                    </ul>
+
+                    <h3>5. ¿Cómo pedir que borren tus datos?</h3>
+                    <ul>
+                        <li>Si eres administrador de un servidor, puedes quitar al bot en cualquier momento o pedir que se borre la configuración guardada.</li>
+                        <li>Cualquier usuario puede solicitar que se revise o elimine información relacionada con su cuenta.</li>
+                    </ul>
+
+                    <h3>6. Contacto</h3>
+                    <p>Si tienes dudas sobre esta política o quieres pedir la eliminación de algún dato, puedes contactar directamente a <strong>Sánchez</strong> a través de Discord o del servidor de soporte del bot.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <span>MISS ME & BACKUP SYSTEM</span> • Minimalismo y poder para Discord
+    </footer>
+
+    <script>
+        const BOT_API_URL = "https://limpness-perfected-congress.ngrok-free.dev";
+        const BOT_API_KEY = "missme_secret_control_token_2026";
+        const DISCORD_CLIENT_ID = "1551781231384068097";
+        const HOST_USER_ID = "1371324060788719669";
+
+        const REDIRECT_URI = window.location.origin + window.location.pathname;
+
+        let currentUser = null;
+        let discordAccessToken = null;
+        let guildsMap = {};
+        let selectedGuildId = null;
+        let hostPollTimer = null;
+        let latestHostCommands = [];
+        let hostActivityChartInstance = null;
+        let hostMembersChartInstance = null;
+
+        const sampleMembers = [
+            { mention: "@usuario1", name: "usuario1", count: 251, avatar: "assets/avatar.png" },
+            { mention: "@usuario2", name: "usuario2", count: 252, avatar: "assets/gatino window.webp" }
+        ];
+        let sampleIdx = 0;
+
+        function getOrCreateVisitorId() {
+            let vid = localStorage.getItem("missme_visitor_uid");
+            if (!vid) {
+                vid = (window.crypto && window.crypto.randomUUID)
+                    ? window.crypto.randomUUID()
+                    : `v_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+                localStorage.setItem("missme_visitor_uid", vid);
+            }
+            return vid;
+        }
+
+        async function trackSiteVisit() {
+            try {
+                const visitorId = getOrCreateVisitorId();
+                await fetch(`${BOT_API_URL}/api/visits/track`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-API-Key": BOT_API_KEY,
+                        "ngrok-skip-browser-warning": "true"
+                    },
+                    body: JSON.stringify({
+                        visitor_id: visitorId,
+                        discord_id: currentUser ? currentUser.id : null,
+                        username: currentUser ? currentUser.username : "Visitante",
+                        avatar: currentUser ? currentUser.avatar : "assets/avatar.png",
+                        page: window.location.pathname
+                    })
+                });
+            } catch (_) {
+                // Silencioso si la API está apagada
+            }
+        }
+
+        function getLocalGuildKey(guildId) {
+            return `missme_welcome_cfg_${String(guildId)}`;
+        }
+
+        function readLocalGuildConfig(guildId) {
+            try {
+                const raw = localStorage.getItem(getLocalGuildKey(guildId));
+                return raw ? JSON.parse(raw) : null;
+            } catch (_) {
+                return null;
+            }
+        }
+
+        function writeLocalGuildConfig(guildId, cfg) {
+            try {
+                localStorage.setItem(getLocalGuildKey(guildId), JSON.stringify(cfg));
+            } catch (_) {
+                // ignora si excede cuota de localStorage
+            }
+        }
+
+        function isHostAccount() {
+            return Boolean(currentUser && String(currentUser.id).trim() === HOST_USER_ID);
+        }
+
+        function updateHostVisibility() {
+            const unlocked = isHostAccount();
+            document.getElementById('btn-host').style.display = unlocked ? 'inline-flex' : 'none';
+            document.getElementById('navHostLinkItem').style.display = unlocked ? 'list-item' : 'none';
+
+            if (unlocked && currentUser) {
+                document.getElementById('hostSideAvatar').src = currentUser.avatar || "assets/avatar.png";
+            }
+
+            if (!unlocked && document.getElementById('view-host').classList.contains('active-view')) {
+                switchBot('missme');
+            }
+        }
+
+        function createDefaultGuildConfig() {
+            return {
+                channel_id: "",
+                outside_text: "hii, {user}",
+                embed_desc: `𝐬𝐚𝐧𝐜𝐡𝐳\n\nwelcome to **@{server}**\n\nYou know who we are\n\n.gg/{server}`,
+                embed_color: "#383838",
+                show_counter: true,
+                avatar_mode: "user",
+                default_avatar_url: "",
+                default_avatar_name: "",
+                banner_url: "",
+                banner_name: "",
+                button_enabled: true,
+                button_label: "own to vc",
+                button_url: "https://discord.gg/removingsouls",
+                authorized_editors: []
+            };
+        }
+
+        function switchBot(botName) {
+            if (botName === 'host' && !isHostAccount()) {
+                botName = 'dashboard';
+            }
+
+            ['missme', 'backup', 'dashboard', 'privacy', 'host'].forEach(v => {
+                const viewEl = document.getElementById('view-' + v);
+                const btnEl = document.getElementById('btn-' + v);
+                if (viewEl) viewEl.classList.remove('active-view');
+                if (btnEl) btnEl.classList.remove('active');
+            });
+
+            document.getElementById('view-' + botName).classList.add('active-view');
+            const activeBtn = document.getElementById('btn-' + botName);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const navInvite = document.getElementById('navInviteBtn');
+            if (botName === 'backup') {
+                navInvite.textContent = 'Invitar Backup';
+                navInvite.href = 'https://discord.com/api/oauth2/authorize?client_id=1558922334759288923&permissions=8&scope=bot';
+            } else {
+                navInvite.textContent = 'Invitar bot';
+                navInvite.href = 'https://discord.com/api/oauth2/authorize?client_id=1551781231384068097&permissions=8&scope=bot%20applications.commands';
+            }
+
+            if (botName === 'host' && isHostAccount()) {
+                refreshMissMeHostData();
+            }
+        }
+
+        function filterCommands(inputId, gridId) {
+            let input = document.getElementById(inputId).value.toLowerCase();
+            let grid = document.getElementById(gridId);
+            let cards = grid.getElementsByClassName('cmd-card');
+
+            for (let i = 0; i < cards.length; i++) {
+                let items = cards[i].getElementsByClassName('cmd-item');
+                let cardHasMatch = false;
+
+                for (let j = 0; j < items.length; j++) {
+                    let text = items[j].innerText.toLowerCase();
+                    if (text.includes(input)) {
+                        items[j].style.display = "";
+                        cardHasMatch = true;
+                    } else {
+                        items[j].style.display = "none";
+                    }
+                }
+                cards[i].style.display = (cardHasMatch || input === "") ? "" : "none";
+            }
+        }
+
+        function toggleDiscordLogin() {
+            if (currentUser) {
+                if (hostPollTimer) clearInterval(hostPollTimer);
+                localStorage.removeItem("discord_token");
+                currentUser = null;
+                discordAccessToken = null;
+                guildsMap = {};
+                selectedGuildId = null;
+                updateHostVisibility();
+                document.getElementById('discordLoginBtn').style.display = 'inline-flex';
+                document.getElementById('discordUserPill').style.display = 'none';
+                document.getElementById('dashLoginGate').style.display = 'block';
+                document.getElementById('dashMainContent').style.display = 'none';
+                return;
+            }
+
+            const oauthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds&prompt=consent`;
+            window.location.href = oauthUrl;
+        }
+
+        async function initDiscordSession() {
+            await trackSiteVisit();
+
+            const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            const tokenFromUrl = hashParams.get("access_token");
+
+            if (tokenFromUrl) {
+                localStorage.setItem("discord_token", tokenFromUrl);
+                window.history.replaceState({}, document.title, window.location.pathname);
+                switchBot('dashboard');
+            }
+
+            const savedToken = localStorage.getItem("discord_token");
+            if (!savedToken) return;
+
+            discordAccessToken = savedToken;
+
+            try {
+                const userRes = await fetch("https://discord.com/api/users/@me", {
+                    headers: { Authorization: `Bearer ${discordAccessToken}` }
+                });
+
+                if (!userRes.ok) {
+                    localStorage.removeItem("discord_token");
+                    return;
+                }
+
+                const userData = await userRes.json();
+                const avatarUrl = userData.avatar
+                    ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
+                    : "assets/avatar.png";
+
+                currentUser = {
+                    id: String(userData.id).trim(),
+                    username: userData.global_name || userData.username,
+                    avatar: avatarUrl
+                };
+
+                await trackSiteVisit();
+
+                const hostRecognized = isHostAccount();
+                updateHostVisibility();
+
+                document.getElementById('discordLoginBtn').style.display = 'none';
+                document.getElementById('discordUserPill').style.display = 'inline-flex';
+                document.getElementById('loggedUserName').textContent = hostRecognized
+                    ? `${currentUser.username} [HOST] (Salir)`
+                    : `${currentUser.username} (Salir)`;
+                document.getElementById('loggedUserAvatar').src = currentUser.avatar;
+                document.getElementById('dashLoginGate').style.display = 'none';
+                document.getElementById('dashMainContent').style.display = 'block';
+
+                await fetchGuildsFromBot();
+
+                if (hostRecognized) {
+                    await refreshMissMeHostData();
+                    if (hostPollTimer) clearInterval(hostPollTimer);
+                    hostPollTimer = setInterval(refreshMissMeHostData, 5000);
+                }
+            } catch (err) {
+                console.error("Error verificando sesión de Discord:", err);
+            }
+        }
+
+        function extractServerLink(g) {
+            const raw = g.invite_url || g.invite || g.vanity_url || g.url || "";
+            if (!raw) return "";
+            const trimmed = String(raw).trim();
+            if (!trimmed) return "";
+            if (/^https?:\/\//i.test(trimmed)) return trimmed;
+            const code = trimmed.replace(/^discord\.gg\//i, "");
+            return `https://discord.gg/${code}`;
+        }
+
+        function registerGuildsIntoMap(rawList, forceIncludeAllForHost = false) {
+            if (!Array.isArray(rawList)) return;
+
+            rawList.forEach(g => {
+                if (!g || g.id === undefined || g.id === null) return;
+                const gid = String(g.id);
+                const existing = guildsMap[gid];
+                const localSaved = readLocalGuildConfig(gid);
+                const base = createDefaultGuildConfig();
+                const serverSaved = (g.config && typeof g.config === "object") ? g.config : {};
+                const memCfg = existing ? existing.config : {};
+
+                const mergedCfg = {
+                    ...base,
+                    ...(localSaved || {}),
+                    ...serverSaved,
+                    ...memCfg
+                };
+
+                const channelsList = (Array.isArray(g.channels) && g.channels.length)
+                    ? g.channels
+                    : (existing && existing.channels && existing.channels.length ? existing.channels : []);
+
+                guildsMap[gid] = {
+                    id: gid,
+                    name: g.name || (existing ? existing.name : `Servidor ${gid}`),
+                    icon: g.icon || (existing ? existing.icon : "assets/avatar.png"),
+                    owner: g.owner || (existing ? existing.owner : "Dueño del servidor"),
+                    member_count: g.member_count ?? (Array.isArray(g.members) ? g.members.length : (existing ? existing.member_count : 0)),
+                    invite_url: extractServerLink(g) || (existing ? existing.invite_url : ""),
+                    is_owner: Boolean(g.is_owner) || forceIncludeAllForHost || isHostAccount(),
+                    channels: channelsList,
+                    members: (Array.isArray(g.members) && g.members.length) ? g.members : (existing ? existing.members : []),
+                    config: {
+                        ...mergedCfg,
+                        channel_id: mergedCfg.channel_id ? String(mergedCfg.channel_id) : "",
+                        authorized_editors: (mergedCfg.authorized_editors || []).map(String)
+                    }
+                };
+            });
+        }
+
+        async function fetchGuildsFromBot() {
+            const dot = document.getElementById('botConnDot');
+            const statusText = document.getElementById('botConnText');
+            const hostMode = isHostAccount();
+
+            try {
+                const endpoint = hostMode
+                    ? `${BOT_API_URL}/api/guilds/${currentUser.id}?all_guilds=1`
+                    : `${BOT_API_URL}/api/guilds/${currentUser.id}`;
+
+                const res = await fetch(endpoint, {
+                    headers: {
+                        "X-API-Key": BOT_API_KEY,
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                guildsMap = {};
+                let guildList = Array.isArray(data.guilds) ? data.guilds : [];
+                registerGuildsIntoMap(guildList, hostMode);
+
+                if (hostMode) {
+                    const srvRes = await fetch(`${BOT_API_URL}/api/servers`, {
+                        headers: {
+                            "X-API-Key": BOT_API_KEY,
+                            "ngrok-skip-browser-warning": "true"
+                        }
+                    }).catch(() => null);
+
+                    if (srvRes && srvRes.ok) {
+                        const srvData = await srvRes.json();
+                        if (Array.isArray(srvData.servers)) {
+                            registerGuildsIntoMap(srvData.servers, true);
+                        }
+                    }
+                }
+
+                const totalCount = Object.keys(guildsMap).length;
+                dot.classList.remove('offline');
+                statusText.textContent = `Conectado en vivo como ${currentUser.username} (${totalCount} servidores donde está el bot)`;
+
+                if (totalCount === 0) {
+                    document.getElementById('guildSelect').innerHTML = `<option value="">No hay servidores disponibles con Miss Me Bot</option>`;
+                    document.getElementById('editingGuildBadge').textContent = "Sin servidores disponibles";
+                    return;
+                }
+
+                populateGuildSelector();
+            } catch (err) {
+                dot.classList.add('offline');
+                statusText.innerHTML = `No se pudo conectar con la API del bot en <code>${BOT_API_URL}</code>. Revisa que el bot y el túnel estén activos`;
+                document.getElementById('guildSelect').innerHTML = `<option value="">Sin conexión con el servidor del bot</option>`;
+            }
+        }
+
+        function populateGuildSelector() {
+            const sel = document.getElementById('guildSelect');
+            const prevSelected = selectedGuildId;
+            const ids = Object.keys(guildsMap);
+            const hostMode = isHostAccount();
+
+            sel.innerHTML = ids.map(id => {
+                const g = guildsMap[id];
+                const roleLabel = hostMode ? 'Host' : (g.is_owner ? 'Dueño' : 'Editor');
+                return `<option value="${g.id}">${g.name} (${roleLabel})</option>`;
+            }).join('');
+
+            if (ids.length > 0) {
+                selectedGuildId = (prevSelected && guildsMap[prevSelected]) ? prevSelected : ids[0];
+                sel.value = selectedGuildId;
+                loadGuildIntoForm(selectedGuildId);
+            }
+        }
+
+        function switchSelectedGuild() {
+            syncFormToCurrentGuild();
+            selectedGuildId = document.getElementById('guildSelect').value;
+            loadGuildIntoForm(selectedGuildId);
+        }
+
+        function loadGuildIntoForm(guildId) {
+            const guild = guildsMap[guildId];
+            if (!guild) return;
+            const cfg = guild.config;
+
+            document.getElementById('editingGuildBadge').textContent = `${guild.name} (ID: ${guild.id})`;
+
+            const memSel = document.getElementById('memberPicker');
+            memSel.innerHTML = guild.members.map(m => `<option value="${m.id}">${m.display_name} (@${m.name})</option>`).join('');
+            document.getElementById('ownerEditorsSection').style.display = (guild.is_owner || isHostAccount()) ? 'block' : 'none';
+
+            document.getElementById('wCounter').checked = !!cfg.show_counter;
+            document.getElementById('wOutside').value = cfg.outside_text ?? "";
+            document.getElementById('wDesc').value = cfg.embed_desc ?? "";
+            document.getElementById('wColor').value = cfg.embed_color || "#383838";
+            document.getElementById('wAvatarMode').value = cfg.avatar_mode || "user";
+            document.getElementById('wBtnEnabled').checked = !!cfg.button_enabled;
+            document.getElementById('wBtnLabel').value = cfg.button_label ?? "";
+            document.getElementById('wBtnUrl').value = cfg.button_url ?? "";
+
+            if (cfg.default_avatar_url) {
+                document.getElementById('defaultAvatarMini').src = cfg.default_avatar_url;
+                document.getElementById('defaultAvatarMini').style.display = 'block';
+                document.getElementById('defaultAvatarName').textContent = cfg.default_avatar_name || "Imagen cargada";
+            } else {
+                document.getElementById('defaultAvatarMini').style.display = 'none';
+                document.getElementById('defaultAvatarName').textContent = "Ningún archivo seleccionado";
+            }
+
+            if (cfg.banner_url) {
+                document.getElementById('bannerMini').src = cfg.banner_url;
+                document.getElementById('bannerMini').style.display = 'block';
+                document.getElementById('bannerFileName').textContent = cfg.banner_name || "Banner cargado";
+            } else {
+                document.getElementById('bannerMini').style.display = 'none';
+                document.getElementById('bannerFileName').textContent = "Sin imagen o GIF seleccionado";
+            }
+
+            renderAuthorizedEditors(guildId);
+            updateWelcomePreview();
+        }
+
+        function syncFormToCurrentGuild() {
+            if (!selectedGuildId || !guildsMap[selectedGuildId]) return;
+            const cfg = guildsMap[selectedGuildId].config;
+
+            cfg.show_counter = document.getElementById('wCounter').checked;
+            cfg.outside_text = document.getElementById('wOutside').value;
+            cfg.embed_desc = document.getElementById('wDesc').value;
+            cfg.embed_color = document.getElementById('wColor').value;
+            cfg.avatar_mode = document.getElementById('wAvatarMode').value;
+            cfg.button_enabled = document.getElementById('wBtnEnabled').checked;
+            cfg.button_label = document.getElementById('wBtnLabel').value;
+            cfg.button_url = document.getElementById('wBtnUrl').value;
+
+            writeLocalGuildConfig(selectedGuildId, cfg);
+            updateWelcomePreview();
+        }
+
+        function renderAuthorizedEditors(guildId) {
+            const guild = guildsMap[guildId];
+            const listEl = document.getElementById('editorsList');
+            let html = `<span class="editor-tag owner-badge">Dueño del Servidor</span>`;
+
+            guild.config.authorized_editors.forEach(edId => {
+                const found = guild.members.find(m => m.id === edId);
+                const label = found ? `@${found.name}` : `ID: ${edId}`;
+                html += `<span class="editor-tag">${label} <button type="button" onclick="removeAuthorizedEditor('${edId}')" title="Quitar permiso">×</button></span>`;
+            });
+            listEl.innerHTML = html;
+        }
+
+        function addAuthorizedEditor() {
+            if (!selectedGuildId) return;
+            const guild = guildsMap[selectedGuildId];
+            const memberId = document.getElementById('memberPicker').value;
+            if (memberId && !guild.config.authorized_editors.includes(memberId)) {
+                guild.config.authorized_editors.push(memberId);
+                writeLocalGuildConfig(selectedGuildId, guild.config);
+                renderAuthorizedEditors(selectedGuildId);
+            }
+        }
+
+        function removeAuthorizedEditor(memberId) {
+            if (!selectedGuildId) return;
+            const guild = guildsMap[selectedGuildId];
+            guild.config.authorized_editors = guild.config.authorized_editors.filter(id => id !== memberId);
+            writeLocalGuildConfig(selectedGuildId, guild.config);
+            renderAuthorizedEditors(selectedGuildId);
+        }
+
+        function handleGalleryUpload(event, type) {
+            const file = event.target.files[0];
+            if (!file || !selectedGuildId) return;
+            const cfg = guildsMap[selectedGuildId].config;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (type === 'default') {
+                    cfg.default_avatar_url = e.target.result;
+                    cfg.default_avatar_name = file.name;
+                    document.getElementById('defaultAvatarMini').src = e.target.result;
+                    document.getElementById('defaultAvatarMini').style.display = 'block';
+                    document.getElementById('defaultAvatarName').textContent = file.name;
+                } else {
+                    cfg.banner_url = e.target.result;
+                    cfg.banner_name = file.name;
+                    document.getElementById('bannerMini').src = e.target.result;
+                    document.getElementById('bannerMini').style.display = 'block';
+                    document.getElementById('bannerFileName').textContent = file.name;
+                }
+                writeLocalGuildConfig(selectedGuildId, cfg);
+                updateWelcomePreview();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearGalleryUpload(type) {
+            if (!selectedGuildId) return;
+            const cfg = guildsMap[selectedGuildId].config;
+            if (type === 'default') {
+                cfg.default_avatar_url = "";
+                cfg.default_avatar_name = "";
+                document.getElementById('defaultAvatarInput').value = "";
+                document.getElementById('defaultAvatarMini').style.display = 'none';
+                document.getElementById('defaultAvatarName').textContent = "Ningún archivo seleccionado";
+            } else {
+                cfg.banner_url = "";
+                cfg.banner_name = "";
+                document.getElementById('bannerInput').value = "";
+                document.getElementById('bannerMini').style.display = 'none';
+                document.getElementById('bannerFileName').textContent = "Sin imagen o GIF seleccionado";
+            }
+            writeLocalGuildConfig(selectedGuildId, cfg);
+            updateWelcomePreview();
+        }
+
+        function insertWelcomeVar(v) {
+            const ta = document.getElementById('wDesc');
+            const start = ta.selectionStart;
+            const end = ta.selectionEnd;
+            ta.value = ta.value.substring(0, start) + v + ta.value.substring(end);
+            ta.focus();
+            ta.selectionStart = ta.selectionEnd = start + v.length;
+            syncFormToCurrentGuild();
+        }
+
+        function nextSampleUser() {
+            sampleIdx = (sampleIdx + 1) % sampleMembers.length;
+            updateWelcomePreview();
+        }
+
+        function formatText(raw, userObj, serverName) {
+            let safe = String(raw ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            return safe
+                .replace(/\{server\}/g, serverName)
+                .replace(/\{username\}/g, userObj.name)
+                .replace(/\{count\}/g, `#${userObj.count}`)
+                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+                .replace(/\{user\}/g, `<span class="dc-mention">${userObj.mention}</span>`);
+        }
+
+        function updateWelcomePreview() {
+            if (!selectedGuildId || !guildsMap[selectedGuildId]) return;
+            const guild = guildsMap[selectedGuildId];
+            const cfg = guild.config;
+            const user = sampleMembers[sampleIdx];
+
+            const chObj = cfg.channel_id ? guild.channels.find(c => String(c.id) === String(cfg.channel_id)) : null;
+            document.getElementById('prevChannel').textContent = chObj
+                ? chObj.name
+                : (cfg.channel_id ? `#${cfg.channel_id}` : "Configurar con comando en el servidor");
+
+            document.getElementById('prevOutside').innerHTML = formatText(cfg.outside_text, user, guild.name);
+
+            let descHtml = formatText(cfg.embed_desc, user, guild.name);
+            if (cfg.show_counter) {
+                descHtml += ` + member #${user.count}`;
+            }
+            document.getElementById('prevDesc').innerHTML = descHtml;
+
+            document.getElementById('wColorHex').textContent = cfg.embed_color.toUpperCase();
+            document.getElementById('prevEmbed').style.borderLeftColor = cfg.embed_color;
+
+            const thumb = document.getElementById('prevThumb');
+            document.getElementById('defaultAvatarBox').style.display = (cfg.avatar_mode === 'default') ? 'block' : 'none';
+
+            if (cfg.avatar_mode === 'none') {
+                thumb.style.display = 'none';
+            } else if (cfg.avatar_mode === 'default') {
+                thumb.style.display = 'block';
+                thumb.src = cfg.default_avatar_url || "assets/avatar.png";
+            } else {
+                thumb.style.display = 'block';
+                thumb.src = user.avatar;
+            }
+
+            const banner = document.getElementById('prevBanner');
+            if (cfg.banner_url) {
+                banner.src = cfg.banner_url;
+                banner.style.display = 'block';
+            } else {
+                banner.style.display = 'none';
+            }
+
+            document.getElementById('btnFieldsRow').style.display = cfg.button_enabled ? 'grid' : 'none';
+            const prevBtn = document.getElementById('prevBtn');
+            if (cfg.button_enabled) {
+                prevBtn.style.display = 'inline-flex';
+                document.getElementById('prevBtnText').textContent = cfg.button_label || 'Enlace';
+            } else {
+                prevBtn.style.display = 'none';
+            }
+        }
+
+        async function saveWelcomeSettingsToBot() {
+            if (!selectedGuildId || !guildsMap[selectedGuildId]) return;
+            syncFormToCurrentGuild();
+
+            const guild = guildsMap[selectedGuildId];
+            const cfg = guild.config;
+            const toast = document.getElementById('saveToast');
+
+            try {
+                const res = await fetch(`${BOT_API_URL}/api/welcome/${guild.id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-API-Key": BOT_API_KEY,
+                        "ngrok-skip-browser-warning": "true"
+                    },
+                    body: JSON.stringify({
+                        owner_id: currentUser.id,
+                        outside_text: cfg.outside_text,
+                        embed_desc: cfg.embed_desc,
+                        embed_color: cfg.embed_color,
+                        show_counter: cfg.show_counter,
+                        avatar_mode: cfg.avatar_mode,
+                        default_avatar_url: cfg.default_avatar_url || null,
+                        default_avatar_name: cfg.default_avatar_name || null,
+                        banner_url: cfg.banner_url || null,
+                        banner_name: cfg.banner_name || null,
+                        button_enabled: cfg.button_enabled,
+                        button_label: cfg.button_label,
+                        button_url: cfg.button_url,
+                        authorized_editors: cfg.authorized_editors
+                    })
+                });
+
+                if (!res.ok) throw new Error("Error HTTP al guardar");
+
+                const savedData = await res.json().catch(() => ({}));
+                if (savedData && savedData.config && typeof savedData.config === "object") {
+                    guildsMap[selectedGuildId].config = {
+                        ...guildsMap[selectedGuildId].config,
+                        ...savedData.config
+                    };
+                }
+                writeLocalGuildConfig(selectedGuildId, guildsMap[selectedGuildId].config);
+                updateWelcomePreview();
+
+                toast.style.display = 'block';
+                toast.innerHTML = `Guardado en <strong>Miss Me Bot</strong> exclusivamente para <strong>${guild.name}</strong> (<code>${guild.id}</code>)`;
+            } catch (e) {
+                toast.style.display = 'block';
+                toast.innerHTML = `Guardado en tu navegador para <strong>${guild.name}</strong>; revisa que <code>BOT_API_URL</code> tenga la URL activa de ngrok para sincronizar con el bot`;
+            }
+
+            setTimeout(() => { toast.style.display = 'none'; }, 4500);
+        }
+
+        function switchHostTab(tabName) {
+            ['resumen', 'servers', 'errors', 'commands', 'visits'].forEach(t => {
+                document.getElementById('hostTabBtn-' + t).classList.remove('active');
+                document.getElementById('hostPanel-' + t).classList.remove('active');
+            });
+            document.getElementById('hostTabBtn-' + tabName).classList.add('active');
+            document.getElementById('hostPanel-' + tabName).classList.add('active');
+        }
+
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        async function refreshMissMeHostData() {
+            if (!isHostAccount()) return;
+
+            const headers = {
+                "X-API-Key": BOT_API_KEY,
+                "ngrok-skip-browser-warning": "true"
+            };
+
+            let apiReachable = false;
+            let statsData = {};
+
+            try {
+                const statsRes = await fetch(`${BOT_API_URL}/api/host/stats?host_id=${currentUser.id}`, { headers });
+                if (statsRes.ok) {
+                    statsData = await statsRes.json();
+                    apiReachable = true;
+                }
+            } catch (e) {
+                apiReachable = false;
+            }
+
+            try {
+                const statusRes = await fetch(`${BOT_API_URL}/api/status`, { headers });
+                if (statusRes.ok) {
+                    const st = await statusRes.json();
+                    apiReachable = true;
+                    document.getElementById('hostApiState').textContent = st.online === false ? 'OFFLINE' : 'ONLINE';
+                    document.getElementById('hostBotLatency').textContent = `${st.latency_ms ?? 0}ms`;
+                } else if (apiReachable) {
+                    document.getElementById('hostApiState').textContent = 'ONLINE';
+                }
+            } catch (e) {
+                if (apiReachable) {
+                    document.getElementById('hostApiState').textContent = 'ONLINE';
+                }
+            }
+
+            if (!apiReachable) {
+                document.getElementById('hostApiState').textContent = 'OFFLINE';
+                document.getElementById('hostBotLatency').textContent = '—';
+                const fallbackServers = Object.values(guildsMap).map(g => ({
+                    id: g.id,
+                    name: g.name,
+                    icon: g.icon || "assets/avatar.png",
+                    owner: g.owner || "Dueño del servidor",
+                    member_count: g.member_count ?? (g.members ? g.members.length : 0),
+                    invite_url: g.invite_url || ""
+                }));
+
+                renderMissMeHostPanel({
+                    servers: fallbackServers,
+                    errors: [],
+                    commands: [],
+                    unique_visits: 0,
+                    visitors: []
+                });
+                return;
+            }
+
+            const mergedById = new Map();
+            const addSrv = (s) => {
+                if (!s || s.id === undefined || s.id === null) return;
+                const sid = String(s.id);
+                const prev = mergedById.get(sid) || {};
+                const link = extractServerLink(s) || prev.invite_url || "";
+                mergedById.set(sid, {
+                    ...prev,
+                    ...s,
+                    id: sid,
+                    name: s.name || prev.name || `Servidor ${sid}`,
+                    icon: s.icon || prev.icon || "assets/avatar.png",
+                    owner: s.owner || prev.owner || "Desconocido",
+                    member_count: s.member_count ?? prev.member_count ?? 0,
+                    invite_url: link
+                });
+            };
+
+            if (Array.isArray(statsData.servers)) statsData.servers.forEach(addSrv);
+
+            try {
+                const srvRes = await fetch(`${BOT_API_URL}/api/servers`, { headers });
+                if (srvRes.ok) {
+                    const srvData = await srvRes.json();
+                    if (Array.isArray(srvData.servers)) srvData.servers.forEach(addSrv);
+                }
+            } catch (e) {
+                // ignora si /api/servers falla tras tener /api/host/stats
+            }
+
+            const allHostServers = Array.from(mergedById.values());
+            registerGuildsIntoMap(allHostServers, true);
+            populateGuildSelector();
+
+            renderMissMeHostPanel({
+                servers: allHostServers,
+                errors: Array.isArray(statsData.errors) ? statsData.errors : [],
+                commands: Array.isArray(statsData.commands) ? statsData.commands : [],
+                unique_visits: statsData.unique_visits,
+                visitors: Array.isArray(statsData.visitors) ? statsData.visitors : []
+            });
+        }
+
+        function renderHostCharts(servers, errors, commands) {
+            if (typeof Chart === "undefined") return;
+
+            const actCtx = document.getElementById('hostActivityChart');
+            if (actCtx) {
+                const labels = ['T-4', 'T-3', 'T-2', 'T-1', 'Ahora'];
+                const cmdSeries = [
+                    Math.max(0, commands.length - 4),
+                    Math.max(0, commands.length - 3),
+                    Math.max(0, commands.length - 2),
+                    Math.max(0, commands.length - 1),
+                    commands.length
+                ];
+                const errSeries = [0, 0, 0, 0, errors.length];
+
+                if (hostActivityChartInstance) {
+                    hostActivityChartInstance.data.labels = labels;
+                    hostActivityChartInstance.data.datasets[0].data = cmdSeries;
+                    hostActivityChartInstance.data.datasets[1].data = errSeries;
+                    hostActivityChartInstance.update();
+                } else {
+                    hostActivityChartInstance = new Chart(actCtx, {
+                        type: 'line',
+                        data: {
+                            labels,
+                            datasets: [
+                                {
+                                    label: 'Comandos',
+                                    data: cmdSeries,
+                                    borderColor: '#ffffff',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                                    tension: 0.35,
+                                    fill: true
+                                },
+                                {
+                                    label: 'Fallas',
+                                    data: errSeries,
+                                    borderColor: '#888899',
+                                    backgroundColor: 'rgba(136, 136, 153, 0.12)',
+                                    tension: 0.35,
+                                    fill: true
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { labels: { color: '#c4c4d4' } } },
+                            scales: {
+                                x: { ticks: { color: '#888899' }, grid: { color: '#22222d' } },
+                                y: { beginAtZero: true, ticks: { color: '#888899', precision: 0 }, grid: { color: '#22222d' } }
+                            }
+                        }
+                    });
+                }
+            }
+
+            const memCtx = document.getElementById('hostMembersChart');
+            if (memCtx) {
+                const topSrv = servers.slice(0, 8);
+                const sLabels = topSrv.map(s => s.name || 'Servidor');
+                const sCounts = topSrv.map(s => Number(s.member_count || 0));
+                const palette = ['#ffffff', '#c4c4d4', '#888899', '#666677', '#4a4a58', '#333340', '#22222d', '#181820'];
+
+                if (hostMembersChartInstance) {
+                    hostMembersChartInstance.data.labels = sLabels;
+                    hostMembersChartInstance.data.datasets[0].data = sCounts;
+                    hostMembersChartInstance.update();
+                } else {
+                    hostMembersChartInstance = new Chart(memCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: sLabels,
+                            datasets: [{
+                                data: sCounts,
+                                backgroundColor: palette,
+                                borderColor: '#0c0c0e',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { position: 'bottom', labels: { color: '#c4c4d4', boxWidth: 12 } } }
+                        }
+                    });
+                }
+            }
+        }
+
+        function renderHostCommandsList() {
+            const q = (document.getElementById('hostCommandSearch')?.value || '').toLowerCase().trim();
+            const commandsList = document.getElementById('hostCommandsList');
+            const filtered = latestHostCommands.filter(cmd => {
+                if (!q) return true;
+                const hay = `${cmd.user_tag || cmd.user || ''} ${cmd.command || ''} ${cmd.timestamp || cmd.datetime || ''} ${cmd.bot_response || cmd.response || ''}`.toLowerCase();
+                return hay.includes(q);
+            });
+
+            if (filtered.length === 0) {
+                commandsList.innerHTML = `<div class="host-log-item">Aún no hay comandos ejecutados registrados</div>`;
+                return;
+            }
+
+            commandsList.innerHTML = filtered.map(cmd => {
+                const userTag = escapeHtml(cmd.user_tag || cmd.user || 'Usuario');
+                const cmdName = escapeHtml(cmd.command || '');
+                const dt = escapeHtml(cmd.timestamp || cmd.datetime || '');
+                const botMsg = escapeHtml(cmd.bot_response || cmd.response || '');
+                return `
+                    <div class="host-log-item">
+                        <div class="host-log-meta">(${userTag}) ejecutó (${cmdName}) con éxito (${dt})</div>
+                        <div><strong>Mensaje enviado por el bot:</strong> ${botMsg}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMissMeHostPanel(data) {
+            const servers = Array.isArray(data.servers) ? data.servers : [];
+            const errors = Array.isArray(data.errors) ? data.errors : [];
+            const commands = Array.isArray(data.commands) ? data.commands : [];
+            const visitors = Array.isArray(data.visitors) ? data.visitors : [];
+            const uniqueVisits = Number(data.unique_visits ?? visitors.length);
+            latestHostCommands = commands;
+
+            const totalMembers = servers.reduce((acc, s) => acc + Number(s.member_count || 0), 0);
+
+            document.getElementById('hostTotalGuilds').textContent = servers.length;
+            document.getElementById('hostTotalErrors').textContent = errors.length;
+            document.getElementById('hostTotalCommands').textContent = commands.length;
+            document.getElementById('hostTotalVisits').textContent = uniqueVisits;
+            document.getElementById('hostTotalMembers').textContent = totalMembers;
+
+            document.getElementById('hostBadgeServers').textContent = servers.length;
+            document.getElementById('hostBadgeErrors').textContent = errors.length;
+            document.getElementById('hostBadgeCommands').textContent = commands.length;
+            document.getElementById('hostBadgeVisits').textContent = uniqueVisits;
+
+            const serversGrid = document.getElementById('hostServersGrid');
+            if (servers.length === 0) {
+                serversGrid.innerHTML = `<div class="host-log-item">Sin servidores conectados en este momento</div>`;
+            } else {
+                serversGrid.innerHTML = servers.map(s => {
+                    const link = extractServerLink(s);
+                    const linkHtml = link
+                        ? `<a class="host-guild-link" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link)}</a>`
+                        : `<span class="host-guild-link-muted">Sin enlace disponible</span>`;
+                    return `
+                        <div class="host-guild-card">
+                            <img class="host-guild-icon" src="${escapeHtml(s.icon || 'assets/avatar.png')}" alt="${escapeHtml(s.name)}">
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.95rem;">${escapeHtml(s.name)}</div>
+                                <div style="color: var(--text-secondary); font-size: 0.82rem; margin-top: 2px;">Dueño: ${escapeHtml(s.owner || 'Desconocido')}</div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;">Miembros: ${escapeHtml(s.member_count ?? 0)}</div>
+                                ${linkHtml}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            const errorsList = document.getElementById('hostErrorsList');
+            if (errors.length === 0) {
+                errorsList.innerHTML = `<div class="host-log-item">Sin fallas registradas en tiempo real</div>`;
+            } else {
+                errorsList.innerHTML = errors.map(err => `
+                    <div class="host-log-item">
+                        <div class="host-log-meta">${escapeHtml(err.timestamp || err.datetime || '')} • ${escapeHtml(err.command || 'Sistema')}</div>
+                        <div>${escapeHtml(err.message || err.error || '')}</div>
+                    </div>
+                `).join('');
+            }
+
+            const visitsList = document.getElementById('hostVisitsList');
+            if (visitsList) {
+                if (visitors.length === 0) {
+                    visitsList.innerHTML = `<div class="host-log-item">Aún no hay visitas registradas</div>`;
+                } else {
+                    visitsList.innerHTML = visitors.map(v => {
+                        const name = escapeHtml(v.username || 'Visitante');
+                        const dcId = v.discord_id ? ` • ID: ${escapeHtml(v.discord_id)}` : ' • Sin sesión';
+                        const firstSeen = escapeHtml(v.first_seen || '');
+                        const lastSeen = escapeHtml(v.last_seen || '');
+                        return `
+                            <div class="host-log-item" style="display: flex; align-items: center; gap: 12px;">
+                                <img src="${escapeHtml(v.avatar || 'assets/avatar.png')}" alt="${name}" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color);">
+                                <div>
+                                    <div><strong>${name}</strong><span style="color: var(--text-muted); font-size: 0.8rem;">${dcId}</span></div>
+                                    <div class="host-log-meta" style="margin-bottom: 0;">Primera visita: ${firstSeen} • Última vez: ${lastSeen}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            renderHostCommandsList();
+            renderHostCharts(servers, errors, commands);
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            if (window.location.hash === "#privacidad" || new URLSearchParams(window.location.search).has("privacy")) {
+                switchBot("privacy");
+            }
+            initDiscordSession();
+        });
+    </script>
+</body>
+</html>
